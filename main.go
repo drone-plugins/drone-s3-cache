@@ -33,6 +33,11 @@ func main() {
 			Usage:  "path",
 			EnvVar: "PLUGIN_PATH",
 		},
+		cli.StringFlag{
+			Name:   "fallback_path",
+			Usage:  "fallback_path",
+			EnvVar: "PLUGIN_FALLBACK_PATH",
+		},
 		cli.StringSliceFlag{
 			Name:   "mount",
 			Usage:  "cache directories",
@@ -145,6 +150,20 @@ func run(c *cli.Context) error {
 		)
 	}
 
+	// Get the fallback path to retrieve the cache files
+	fallbackPath := c.GlobalString("fallback_path")
+
+	// Defaults to <owner>/<repo>/master/
+	if len(fallbackPath) == 0 {
+		log.Info("No fallback_path specified. Creating default")
+
+		fallbackPath = fmt.Sprintf(
+			"/%s/%s/master/",
+			c.String("repo.owner"),
+			c.String("repo.name"),
+		)
+	}
+
 	// Get the filename
 	filename := c.GlobalString("filename")
 
@@ -161,11 +180,12 @@ func run(c *cli.Context) error {
 	}
 
 	p := &Plugin{
-		Filename: filename,
-		Path:     path,
-		Mode:     mode,
-		Mount:    mount,
-		Storage:  s,
+		Filename:     filename,
+		Path:         path,
+		FallbackPath: fallbackPath,
+		Mode:         mode,
+		Mount:        mount,
+		Storage:      s,
 	}
 
 	return p.Exec()
