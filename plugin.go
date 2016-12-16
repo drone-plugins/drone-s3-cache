@@ -7,10 +7,11 @@ import (
 )
 
 type Plugin struct {
-	Filename string
-	Path     string
-	Mode     string
-	Mount    []string
+	Filename     string
+	Path         string
+	FallbackPath string
+	Mode         string
+	Mount        []string
 
 	Storage storage.Storage
 }
@@ -29,6 +30,7 @@ func (p *Plugin) Exec() error {
 	}
 
 	path := p.Path + p.Filename
+	fallback_path := p.FallbackPath + p.Filename
 
 	if p.Mode == RebuildMode {
 		log.Infof("Rebuilding cache at %s", path)
@@ -42,7 +44,7 @@ func (p *Plugin) Exec() error {
 	}
 
 	log.Infof("Restoring cache at %s", path)
-	err = c.Restore(path)
+	err = c.Restore(path, fallback_path)
 
 	if err == nil {
 		log.Info("Cache restored")
