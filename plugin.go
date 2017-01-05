@@ -11,6 +11,7 @@ type Plugin struct {
 	Path         string
 	FallbackPath string
 	Mode         string
+	Flush        bool
 	Mount        []string
 
 	Storage storage.Storage
@@ -36,16 +37,23 @@ func (p *Plugin) Exec() error {
 
 		if err == nil {
 			log.Infof("Cache rebuilt")
+		} else {
+			return err
 		}
+	} else {
+		log.Infof("Restoring cache at %s", path)
+		err = c.Restore(path, fallbackPath)
 
-		return err
+		if err == nil {
+			log.Info("Cache restored")
+		} else {
+			return err
+		}
 	}
 
-	log.Infof("Restoring cache at %s", path)
-	err = c.Restore(path, fallbackPath)
-
-	if err == nil {
-		log.Info("Cache restored")
+	if p.Flush {
+		f := cache.NewDefaultFlusher(p.Storage)
+		err = f.Flush(path)
 	}
 
 	return err

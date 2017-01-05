@@ -53,6 +53,11 @@ func main() {
 			Usage:  "restore the cache directories",
 			EnvVar: "PLUGIN_RESTORE",
 		},
+		cli.BoolFlag{
+			Name:   "flush",
+			Usage:  "flush the cache",
+			EnvVar: "PLUGIN_FLUSH",
+		},
 
 		cli.BoolFlag{
 			Name:   "debug",
@@ -184,6 +189,7 @@ func run(c *cli.Context) error {
 		Path:         path,
 		FallbackPath: fallbackPath,
 		Mode:         mode,
+		Flush:        c.Bool("flush"),
 		Mount:        mount,
 		Storage:      s,
 	}
