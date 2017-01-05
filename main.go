@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/drone-plugins/drone-cache/storage"
+	"github.com/drone/drone-cache-lib/storage"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
 	"github.com/urfave/cli"
 )

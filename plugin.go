@@ -2,8 +2,8 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/drone-plugins/drone-cache/cache"
-	"github.com/drone-plugins/drone-cache/storage"
+	"github.com/drone/drone-cache-lib/cache"
+	"github.com/drone/drone-cache-lib/storage"
 )
 
 type Plugin struct {
