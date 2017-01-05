@@ -165,6 +165,28 @@ func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 }
 
 func (s *s3Storage) Delete(p string) error {
+	bucket, key := splitBucket(p)
+
+	log.Infof("Deleting object in bucket %s at %s", bucket, key)
+
+	if len(bucket) == 0 || len(key) == 0 {
+		return fmt.Errorf("Invalid path %s", p)
+	}
+
+	exists, err := s.client.BucketExists(bucket)
+
+	if err != nil {
+		return fmt.Errorf("%s does not exist: %s", p, err)
+	}
+	if !exists {
+		return fmt.Errorf("%s does not exist", p)
+	}
+
+	err = s.client.RemoveObject(bucket, key)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
