@@ -10,6 +10,7 @@ type Plugin struct {
 	Filename     string
 	Path         string
 	FallbackPath string
+	FlushPath    string
 	Mode         string
 	Flush        bool
 	Mount        []string
@@ -53,7 +54,7 @@ func (p *Plugin) Exec() error {
 
 	if p.Flush {
 		f := cache.NewDefaultFlusher(p.Storage)
-		err = f.Flush(path)
+		err = f.Flush(p.FlushPath)
 	}
 
 	return err

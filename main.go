@@ -169,6 +169,20 @@ func run(c *cli.Context) error {
 		)
 	}
 
+	// Get the flush path to flush the cache files from
+	flushPath := c.GlobalString("flush_path")
+
+	// Defaults to <owner>/<repo>/master/
+	if len(flushPath) == 0 {
+		log.Info("No flush_path specified. Creating default")
+
+		flushPath = fmt.Sprintf(
+			"/%s/%s/",
+			c.String("repo.owner"),
+			c.String("repo.name"),
+		)
+	}
+
 	// Get the filename
 	filename := c.GlobalString("filename")
 
@@ -188,6 +202,7 @@ func run(c *cli.Context) error {
 		Filename:     filename,
 		Path:         path,
 		FallbackPath: fallbackPath,
+		FlushPath:    flushPath,
 		Mode:         mode,
 		Flush:        c.Bool("flush"),
 		Mount:        mount,

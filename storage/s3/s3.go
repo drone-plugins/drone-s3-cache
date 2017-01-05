@@ -125,7 +125,7 @@ func (s *s3Storage) Put(p string, src io.Reader) error {
 func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 	bucket, key := splitBucket(p)
 
-	log.Infof("Retrieving object in bucket %s at %s", bucket, key)
+	log.Infof("Retrieving objects in bucket %s at %s", bucket, key)
 
 	if len(bucket) == 0 || len(key) == 0 {
 		return nil, fmt.Errorf("Invalid path %s", p)
@@ -154,12 +154,16 @@ func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 			return nil, fmt.Errorf("Failed to retreive object %s: %s", object.Key, object.Err)
 		}
 
+		path := bucket + "/" + object.Key
 		objects = append(objects, storage.FileEntry{
-			Path: bucket + "/" + key + "/" + object.Key,
+			Path: path,
 			Size: object.Size,
 			LastModified: object.LastModified,
 		})
+		log.Debugf("Found object %s: Path=%s Size=%s LastModified=%s", object.Key, path, object.Size, object.LastModified)
 	}
+
+	log.Infof("Found %s objects in bucket %s at %s", len(objects), bucket, key)
 
 	return objects, nil
 }
@@ -183,11 +187,7 @@ func (s *s3Storage) Delete(p string) error {
 	}
 
 	err = s.client.RemoveObject(bucket, key)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func splitBucket(p string) (string, string) {
