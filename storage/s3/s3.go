@@ -123,7 +123,45 @@ func (s *s3Storage) Put(p string, src io.Reader) error {
 }
 
 func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
-	return nil, nil
+	bucket, key := splitBucket(p)
+
+	log.Infof("Retrieving object in bucket %s at %s", bucket, key)
+
+	if len(bucket) == 0 || len(key) == 0 {
+		return nil, fmt.Errorf("Invalid path %s", p)
+	}
+
+	exists, err := s.client.BucketExists(bucket)
+
+	if err != nil {
+		return nil, fmt.Errorf("%s does not exist: %s", p, err)
+	}
+	if !exists {
+		return nil, fmt.Errorf("%s does not exist", p)
+	}
+
+	// Create a done channel to control 'ListObjectsV2' go routine.
+	doneCh := make(chan struct{})
+
+	// Indicate to our routine to exit cleanly upon return.
+	defer close(doneCh)
+
+	var objects []storage.FileEntry
+	isRecursive := true
+	objectCh := s.client.ListObjectsV2(bucket, key, isRecursive, doneCh)
+	for object := range objectCh {
+		if object.Err != nil {
+			return nil, fmt.Errorf("Failed to retreive object %s: %s", object.Key, object.Err)
+		}
+
+		objects = append(objects, storage.FileEntry{
+			Path: bucket + "/" + key + "/" + object.Key,
+			Size: object.Size,
+			LastModified: object.LastModified,
+		})
+	}
+
+	return objects, nil
 }
 
 func (s *s3Storage) Delete(p string) error {
