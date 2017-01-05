@@ -23,11 +23,9 @@ const (
 
 // Exec runs the plugin
 func (p *Plugin) Exec() error {
-	c, err := cache.New(p.Storage)
+	var err error
 
-	if err != nil {
-		return err
-	}
+	c := cache.NewDefault(p.Storage)
 
 	path := p.Path + p.Filename
 	fallbackPath := p.FallbackPath + p.Filename

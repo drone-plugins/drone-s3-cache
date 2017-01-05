@@ -122,6 +122,14 @@ func (s *s3Storage) Put(p string, src io.Reader) error {
 	return nil
 }
 
+func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
+	return nil, nil
+}
+
+func (s *s3Storage) Delete(p string) error {
+	return nil
+}
+
 func splitBucket(p string) (string, string) {
 	// Remove initial forward slash
 	full := strings.TrimPrefix(p, "/")
