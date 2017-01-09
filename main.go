@@ -123,10 +123,11 @@ func run(c *cli.Context) error {
 	// Determine the mode for the plugin
 	rebuild := c.Bool("rebuild")
 	restore := c.Bool("restore")
+	flush := c.Bool("flush")
 
-	if rebuild && restore {
-		return errors.New("Cannot rebuild and restore the cache")
-	} else if !rebuild && !restore {
+	if isMultipleModes(rebuild, restore, flush) {
+		return errors.New("Must use a single mode: rebuild, restore or flush")
+	} else if !rebuild && !restore && !flush {
 		return errors.New("No action specified")
 	}
 
@@ -142,6 +143,8 @@ func run(c *cli.Context) error {
 		}
 
 		mode = RebuildMode
+	} else if flush {
+		mode = FlushMode
 	} else {
 		mode = RestoreMode
 	}
@@ -216,7 +219,6 @@ func run(c *cli.Context) error {
 		FallbackPath: fallbackPath,
 		FlushPath:    flushPath,
 		Mode:         mode,
-		Flush:        c.Bool("flush"),
 		FlushAge:     flushAge,
 		Mount:        mount,
 		Storage:      s,
@@ -263,4 +265,19 @@ func s3Storage(c *cli.Context) (storage.Storage, error) {
 		Secret:   secret,
 		UseSSL:   useSSL,
 	})
+}
+
+func isMultipleModes(bools ...bool) bool {
+	var b bool
+	for _, v := range bools {
+		if b && b == v {
+			return true
+		}
+
+		if v {
+			b = true
+		}
+	}
+
+	return false
 }

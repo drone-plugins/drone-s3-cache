@@ -14,7 +14,6 @@ type Plugin struct {
 	FallbackPath string
 	FlushPath    string
 	Mode         string
-	Flush        bool
 	FlushAge     int
 	Mount        []string
 
@@ -24,6 +23,7 @@ type Plugin struct {
 const (
 	RestoreMode = "restore"
 	RebuildMode = "rebuild"
+	FlushMode = "flush"
 )
 
 // Exec runs the plugin
@@ -41,23 +41,26 @@ func (p *Plugin) Exec() error {
 
 		if err == nil {
 			log.Infof("Cache rebuilt")
-		} else {
-			return err
 		}
-	} else {
+	}
+
+	if p.Mode == RestoreMode {
 		log.Infof("Restoring cache at %s", path)
 		err = c.Restore(path, fallbackPath)
 
 		if err == nil {
 			log.Info("Cache restored")
-		} else {
-			return err
 		}
 	}
 
-	if p.Flush {
+	if p.Mode == FlushMode {
+		log.Infof("Flushing cache items older then %s days at %s", p.FlushAge, path)
 		f := cache.NewFlusher(p.Storage, genIsExpired(p.FlushAge))
 		err = f.Flush(p.FlushPath)
+
+		if err == nil {
+			log.Info("Cache flushed")
+		}
 	}
 
 	return err
@@ -65,7 +68,7 @@ func (p *Plugin) Exec() error {
 
 func genIsExpired(age int) cache.DirtyFunc {
 	return func(file storage.FileEntry) bool {
-		// Check if older then 30 days
+		// Check if older then "age" days
 		return file.LastModified.Before(time.Now().AddDate(0, 0, age * -1))
 	}
 }
