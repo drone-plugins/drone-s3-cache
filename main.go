@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
@@ -58,7 +59,12 @@ func main() {
 			Usage:  "flush the cache",
 			EnvVar: "PLUGIN_FLUSH",
 		},
-
+		cli.StringFlag{
+			Name:   "flush_age",
+			Usage:  "flush cache files older then # days",
+			EnvVar: "PLUGIN_FLUSH_AGE",
+			Value:  "30",
+		},
 		cli.BoolFlag{
 			Name:   "debug",
 			Usage:  "debug plugin output",
@@ -198,6 +204,12 @@ func run(c *cli.Context) error {
 		return err
 	}
 
+	flushage, err := strconv.Atoi(c.String("flush_age"))
+
+	if err != nil {
+		return err
+	}
+
 	p := &Plugin{
 		Filename:     filename,
 		Path:         path,
@@ -205,6 +217,7 @@ func run(c *cli.Context) error {
 		FlushPath:    flushPath,
 		Mode:         mode,
 		Flush:        c.Bool("flush"),
+		FlushAge:     flushage,
 		Mount:        mount,
 		Storage:      s,
 	}

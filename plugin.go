@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/cache"
 	"github.com/drone/drone-cache-lib/storage"
@@ -13,6 +15,7 @@ type Plugin struct {
 	FlushPath    string
 	Mode         string
 	Flush        bool
+	FlushAge     int
 	Mount        []string
 
 	Storage storage.Storage
@@ -53,9 +56,21 @@ func (p *Plugin) Exec() error {
 	}
 
 	if p.Flush {
-		f := cache.NewDefaultFlusher(p.Storage)
+		f := cache.NewFlusher(p.Storage, genIsExpired(p.FlushAge))
 		err = f.Flush(p.FlushPath)
 	}
 
 	return err
+}
+
+func genIsExpired(age int) cache.DirtyFunc {
+	return func(file storage.FileEntry) bool {
+		// Check if older then 30 days
+		if file.LastModified.Before(time.Now().AddDate(0, 0, age * -1)) {
+			return true
+		}
+
+		// No match
+		return false
+	}
 }
