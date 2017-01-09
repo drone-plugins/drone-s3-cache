@@ -204,7 +204,7 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	flushage, err := strconv.Atoi(c.String("flush_age"))
+	flushAge, err := strconv.Atoi(c.String("flush_age"))
 
 	if err != nil {
 		return err
@@ -217,7 +217,7 @@ func run(c *cli.Context) error {
 		FlushPath:    flushPath,
 		Mode:         mode,
 		Flush:        c.Bool("flush"),
-		FlushAge:     flushage,
+		FlushAge:     flushAge,
 		Mount:        mount,
 		Storage:      s,
 	}

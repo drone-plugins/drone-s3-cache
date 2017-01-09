@@ -66,11 +66,6 @@ func (p *Plugin) Exec() error {
 func genIsExpired(age int) cache.DirtyFunc {
 	return func(file storage.FileEntry) bool {
 		// Check if older then 30 days
-		if file.LastModified.Before(time.Now().AddDate(0, 0, age * -1)) {
-			return true
-		}
-
-		// No match
-		return false
+		return file.LastModified.Before(time.Now().AddDate(0, 0, age * -1))
 	}
 }
