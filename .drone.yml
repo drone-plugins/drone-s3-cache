@@ -1,0 +1,12 @@
+workspace:
+  base: /go
+  path: src/github.com/drone-plugins/drone-s3-cache
+
+pipeline:
+  build:
+    image: golang:1.7
+    environment:
+      - CGO_ENABLED=0
+    commands:
+      - go test -cover -coverprofile=coverage.out
+      - go build -ldflags "-s -w -X main.revision=$(git rev-parse HEAD)" -a

@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/drone-plugins/drone-cache/storage"
+	"github.com/drone/drone-cache-lib/storage"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
 	"github.com/urfave/cli"
 )
@@ -53,7 +54,17 @@ func main() {
 			Usage:  "restore the cache directories",
 			EnvVar: "PLUGIN_RESTORE",
 		},
-
+		cli.BoolFlag{
+			Name:   "flush",
+			Usage:  "flush the cache",
+			EnvVar: "PLUGIN_FLUSH",
+		},
+		cli.StringFlag{
+			Name:   "flush_age",
+			Usage:  "flush cache files older then # days",
+			EnvVar: "PLUGIN_FLUSH_AGE",
+			Value:  "30",
+		},
 		cli.BoolFlag{
 			Name:   "debug",
 			Usage:  "debug plugin output",
@@ -112,10 +123,11 @@ func run(c *cli.Context) error {
 	// Determine the mode for the plugin
 	rebuild := c.Bool("rebuild")
 	restore := c.Bool("restore")
+	flush := c.Bool("flush")
 
-	if rebuild && restore {
-		return errors.New("Cannot rebuild and restore the cache")
-	} else if !rebuild && !restore {
+	if isMultipleModes(rebuild, restore, flush) {
+		return errors.New("Must use a single mode: rebuild, restore or flush")
+	} else if !rebuild && !restore && !flush {
 		return errors.New("No action specified")
 	}
 
@@ -131,6 +143,8 @@ func run(c *cli.Context) error {
 		}
 
 		mode = RebuildMode
+	} else if flush {
+		mode = FlushMode
 	} else {
 		mode = RestoreMode
 	}
@@ -164,6 +178,20 @@ func run(c *cli.Context) error {
 		)
 	}
 
+	// Get the flush path to flush the cache files from
+	flushPath := c.GlobalString("flush_path")
+
+	// Defaults to <owner>/<repo>/master/
+	if len(flushPath) == 0 {
+		log.Info("No flush_path specified. Creating default")
+
+		flushPath = fmt.Sprintf(
+			"/%s/%s/",
+			c.String("repo.owner"),
+			c.String("repo.name"),
+		)
+	}
+
 	// Get the filename
 	filename := c.GlobalString("filename")
 
@@ -179,11 +207,19 @@ func run(c *cli.Context) error {
 		return err
 	}
 
+	flushAge, err := strconv.Atoi(c.String("flush_age"))
+
+	if err != nil {
+		return err
+	}
+
 	p := &Plugin{
 		Filename:     filename,
 		Path:         path,
 		FallbackPath: fallbackPath,
+		FlushPath:    flushPath,
 		Mode:         mode,
+		FlushAge:     flushAge,
 		Mount:        mount,
 		Storage:      s,
 	}
@@ -229,4 +265,19 @@ func s3Storage(c *cli.Context) (storage.Storage, error) {
 		Secret:   secret,
 		UseSSL:   useSSL,
 	})
+}
+
+func isMultipleModes(bools ...bool) bool {
+	var b bool
+	for _, v := range bools {
+		if b && b == v {
+			return true
+		}
+
+		if v {
+			b = true
+		}
+	}
+
+	return false
 }

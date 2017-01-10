@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/drone-plugins/drone-cache/storage"
+	"github.com/drone/drone-cache-lib/storage"
 	"github.com/dustin/go-humanize"
 	"github.com/minio/minio-go"
 )
@@ -120,6 +120,74 @@ func (s *s3Storage) Put(p string, src io.Reader) error {
 	log.Infof("Uploaded %s to server", humanize.Bytes(uint64(numBytes)))
 
 	return nil
+}
+
+func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
+	bucket, key := splitBucket(p)
+
+	log.Infof("Retrieving objects in bucket %s at %s", bucket, key)
+
+	if len(bucket) == 0 || len(key) == 0 {
+		return nil, fmt.Errorf("Invalid path %s", p)
+	}
+
+	exists, err := s.client.BucketExists(bucket)
+
+	if err != nil {
+		return nil, fmt.Errorf("%s does not exist: %s", p, err)
+	}
+	if !exists {
+		return nil, fmt.Errorf("%s does not exist", p)
+	}
+
+	// Create a done channel to control 'ListObjectsV2' go routine.
+	doneCh := make(chan struct{})
+
+	// Indicate to our routine to exit cleanly upon return.
+	defer close(doneCh)
+
+	var objects []storage.FileEntry
+	isRecursive := true
+	objectCh := s.client.ListObjectsV2(bucket, key, isRecursive, doneCh)
+	for object := range objectCh {
+		if object.Err != nil {
+			return nil, fmt.Errorf("Failed to retreive object %s: %s", object.Key, object.Err)
+		}
+
+		path := bucket + "/" + object.Key
+		objects = append(objects, storage.FileEntry{
+			Path: path,
+			Size: object.Size,
+			LastModified: object.LastModified,
+		})
+		log.Debugf("Found object %s: Path=%s Size=%s LastModified=%s", object.Key, path, object.Size, object.LastModified)
+	}
+
+	log.Infof("Found %s objects in bucket %s at %s", len(objects), bucket, key)
+
+	return objects, nil
+}
+
+func (s *s3Storage) Delete(p string) error {
+	bucket, key := splitBucket(p)
+
+	log.Infof("Deleting object in bucket %s at %s", bucket, key)
+
+	if len(bucket) == 0 || len(key) == 0 {
+		return fmt.Errorf("Invalid path %s", p)
+	}
+
+	exists, err := s.client.BucketExists(bucket)
+
+	if err != nil {
+		return fmt.Errorf("%s does not exist: %s", p, err)
+	}
+	if !exists {
+		return fmt.Errorf("%s does not exist", p)
+	}
+
+	err = s.client.RemoveObject(bucket, key)
+	return err
 }
 
 func splitBucket(p string) (string, string) {
