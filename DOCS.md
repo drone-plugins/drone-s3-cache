@@ -5,8 +5,6 @@ across tests.
 ```yaml
 pipeline:
   restore_from_cache:
-    when:
-      event: [push, pull_request, tag, deployment]
     image: jmccann/drone-s3-cache:1
     url: http://minio.company.com
     access_key: myaccesskey
@@ -43,8 +41,6 @@ Update the files/directories to what **YOU** want by modifying the `mount` key.
 ```diff
 pipeline:
   restore_from_cache:
-    when:
-      event: [push, pull_request, tag, deployment]
     image: jmccann/drone-s3-cache:1
     url: http://minio.company.com
     access_key: myaccesskey
