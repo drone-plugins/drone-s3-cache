@@ -6,6 +6,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/cache"
 	"github.com/drone/drone-cache-lib/storage"
+	"github.com/drone/drone-cache-lib/archive/util"
 )
 
 type Plugin struct {
@@ -30,7 +31,13 @@ const (
 func (p *Plugin) Exec() error {
 	var err error
 
-	c := cache.NewDefault(p.Storage)
+	at, err := util.FromFilename(p.Filename)
+
+	if err != nil {
+		return err
+	}
+
+	c := cache.New(p.Storage, at)
 
 	path := p.Path + p.Filename
 	fallbackPath := p.FallbackPath + p.Filename
