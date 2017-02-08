@@ -39,6 +39,12 @@ func main() {
 			Usage:  "fallback_path",
 			EnvVar: "PLUGIN_FALLBACK_PATH",
 		},
+		cli.StringFlag{
+			Name:   "archive_type",
+			Usage:  "which type of archive to use (tar | tgz)",
+			Value:	"tar",
+			EnvVar: "PLUGIN_ARCHIVE_TYPE",
+		},
 		cli.StringSliceFlag{
 			Name:   "mount",
 			Usage:  "cache directories",
@@ -198,7 +204,7 @@ func run(c *cli.Context) error {
 	if len(filename) == 0 {
 		log.Info("No filename specified. Creating default")
 
-		filename = "archive.tar"
+		filename = fmt.Sprintf("archive.%s", c.String("archive_type"))
 	}
 
 	s, err := s3Storage(c)
@@ -217,6 +223,7 @@ func run(c *cli.Context) error {
 		Filename:     filename,
 		Path:         path,
 		FallbackPath: fallbackPath,
+		ArchiveType:	c.String("archive_type"),
 		FlushPath:    flushPath,
 		Mode:         mode,
 		FlushAge:     flushAge,
