@@ -6,12 +6,16 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/cache"
 	"github.com/drone/drone-cache-lib/storage"
+	"github.com/drone/drone-cache-lib/archive"
+	"github.com/drone/drone-cache-lib/archive/tar"
+	"github.com/drone/drone-cache-lib/archive/tgz"
 )
 
 type Plugin struct {
 	Filename     string
 	Path         string
 	FallbackPath string
+	ArchiveType	 string
 	FlushPath    string
 	Mode         string
 	FlushAge     int
@@ -29,8 +33,15 @@ const (
 // Exec runs the plugin
 func (p *Plugin) Exec() error {
 	var err error
+	var ta archive.Archive
 
-	c := cache.NewDefault(p.Storage)
+	if (p.ArchiveType == "tgz") {
+		ta = tgz.New()
+	} else {
+		ta = tar.New()
+	}
+
+	c := cache.New(p.Storage, ta)
 
 	path := p.Path + p.Filename
 	fallbackPath := p.FallbackPath + p.Filename
