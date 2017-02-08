@@ -39,6 +39,12 @@ func main() {
 			Usage:  "fallback_path",
 			EnvVar: "PLUGIN_FALLBACK_PATH",
 		},
+		cli.StringFlag{
+			Name:   "archive_type",
+			Usage:  "which type of archive to use (tar | tgz)",
+			Value:	"tar",
+			EnvVar: "PLUGIN_ARCHIVE_TYPE",
+		},
 		cli.StringSliceFlag{
 			Name:   "mount",
 			Usage:  "cache directories",
@@ -178,6 +184,21 @@ func run(c *cli.Context) error {
 		)
 	}
 
+	// Get the file type to save archives as
+	archiveType := c.GlobalString("archive_type")
+
+	if len(archiveType) == 0 {
+		log.Info("No archive_type specified.")
+	}
+
+	switch at := archiveType; at {
+	case "tgz":
+		archiveType = "tgz"
+	default:
+		log.Info("Not recognized archive_type. Setting to default.")
+		archiveType = "tar"
+	}
+
 	// Get the flush path to flush the cache files from
 	flushPath := c.GlobalString("flush_path")
 
@@ -198,7 +219,7 @@ func run(c *cli.Context) error {
 	if len(filename) == 0 {
 		log.Info("No filename specified. Creating default")
 
-		filename = "archive.tar"
+		filename = fmt.Sprintf("archive.%s", archiveType)
 	}
 
 	s, err := s3Storage(c)
@@ -217,6 +238,7 @@ func run(c *cli.Context) error {
 		Filename:     filename,
 		Path:         path,
 		FallbackPath: fallbackPath,
+		ArchiveType:  archiveType,
 		FlushPath:    flushPath,
 		Mode:         mode,
 		FlushAge:     flushAge,
