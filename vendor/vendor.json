@@ -1,0 +1,97 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "cT6+XPBZiXsFbb7cXT6AYNrZyuM=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "3f603f494d61c73457fb234161d8982b9f0f0b71",
+			"revisionTime": "2017-02-07T18:34:08Z"
+		},
+		{
+			"checksumSHA1": "4rDSQtDNIhAjEtxyNtawRPoxQc0=",
+			"path": "github.com/drone/drone-cache-lib/archive",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "hRBkf4k9LKe33FMvr77blGO5s3E=",
+			"path": "github.com/drone/drone-cache-lib/archive/tar",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "ygrAO+JGTZatLTJwbwtuOU0PQHw=",
+			"path": "github.com/drone/drone-cache-lib/archive/tgz",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "cpUQ5oH5L/AxdsQpMSkDqIYkn+4=",
+			"path": "github.com/drone/drone-cache-lib/archive/util",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "09EDb6dUJZFCKY2XzNlzatbTylQ=",
+			"path": "github.com/drone/drone-cache-lib/cache",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "JN4UDkuOVnh+haDClKr2Z7eH2zw=",
+			"path": "github.com/drone/drone-cache-lib/storage",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "zkENTbOfU8YoxPfFwVAhTz516Dg=",
+			"path": "github.com/dustin/go-humanize",
+			"revision": "7a41df006ff9af79a29f0ffa9c5f21fbe6314a2d",
+			"revisionTime": "2017-01-10T07:11:07Z"
+		},
+		{
+			"checksumSHA1": "REZco0yp6g2pwSh7jum40abYpXc=",
+			"path": "github.com/minio/minio-go",
+			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
+			"revisionTime": "2017-02-06T22:42:59Z"
+		},
+		{
+			"checksumSHA1": "neH34/65OXeKHM/MlV8MbhcdFBc=",
+			"path": "github.com/minio/minio-go/pkg/policy",
+			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
+			"revisionTime": "2017-02-06T22:42:59Z"
+		},
+		{
+			"checksumSHA1": "m/6/na9lVtamkfmIdIOi5pdccgw=",
+			"path": "github.com/minio/minio-go/pkg/s3signer",
+			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
+			"revisionTime": "2017-02-06T22:42:59Z"
+		},
+		{
+			"checksumSHA1": "gRnCFKb4x83GBLVUZXoOjujd+U0=",
+			"path": "github.com/minio/minio-go/pkg/s3utils",
+			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
+			"revisionTime": "2017-02-06T22:42:59Z"
+		},
+		{
+			"checksumSHA1": "maUy+dbN6VfTTnfErrAW2lLit1w=",
+			"path": "github.com/minio/minio-go/pkg/set",
+			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
+			"revisionTime": "2017-02-06T22:42:59Z"
+		},
+		{
+			"checksumSHA1": "1keN4Q9F8uHk/Gt5YXG0oCEecKM=",
+			"path": "github.com/urfave/cli",
+			"revision": "347a9884a87374d000eec7e6445a34487c1f4a2b",
+			"revisionTime": "2017-01-28T21:39:59Z"
+		},
+		{
+			"checksumSHA1": "uTQtOqR0ePMMcvuvAIksiIZxhqU=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "7a6e5648d140666db5d920909e082ca00a87ba2c",
+			"revisionTime": "2017-02-01T04:15:14Z"
+		}
+	],
+	"rootPath": "github.com/drone-plugins/drone-s3-cache"
+}
