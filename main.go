@@ -223,7 +223,7 @@ func run(c *cli.Context) error {
 		Filename:     filename,
 		Path:         path,
 		FallbackPath: fallbackPath,
-		ArchiveType:	c.String("archive_type"),
+		ArchiveType:  c.String("archive_type"),
 		FlushPath:    flushPath,
 		Mode:         mode,
 		FlushAge:     flushAge,
