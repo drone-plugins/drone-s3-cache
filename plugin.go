@@ -33,8 +33,8 @@ func (p *Plugin) Exec() error {
 
 	at, err := util.FromFilename(p.Filename)
 
-	if err == nil {
-		log.Info("Archive type determined.")
+	if err != nil {
+		return err
 	}
 
 	c := cache.New(p.Storage, at)
