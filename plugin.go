@@ -15,7 +15,7 @@ type Plugin struct {
 	Filename     string
 	Path         string
 	FallbackPath string
-	ArchiveType	 string
+	ArchiveType  string
 	FlushPath    string
 	Mode         string
 	FlushAge     int
@@ -35,9 +35,10 @@ func (p *Plugin) Exec() error {
 	var err error
 	var ta archive.Archive
 
-	if (p.ArchiveType == "tgz") {
+	switch at := p.ArchiveType; at {
+	case "tgz":
 		ta = tgz.New()
-	} else {
+	default:
 		ta = tar.New()
 	}
 
