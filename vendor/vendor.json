@@ -9,42 +9,6 @@
 			"revisionTime": "2017-02-07T18:34:08Z"
 		},
 		{
-			"checksumSHA1": "4rDSQtDNIhAjEtxyNtawRPoxQc0=",
-			"path": "github.com/drone/drone-cache-lib/archive",
-			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
-			"revisionTime": "2017-02-08T21:15:27Z"
-		},
-		{
-			"checksumSHA1": "hRBkf4k9LKe33FMvr77blGO5s3E=",
-			"path": "github.com/drone/drone-cache-lib/archive/tar",
-			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
-			"revisionTime": "2017-02-08T21:15:27Z"
-		},
-		{
-			"checksumSHA1": "ygrAO+JGTZatLTJwbwtuOU0PQHw=",
-			"path": "github.com/drone/drone-cache-lib/archive/tgz",
-			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
-			"revisionTime": "2017-02-08T21:15:27Z"
-		},
-		{
-			"checksumSHA1": "cpUQ5oH5L/AxdsQpMSkDqIYkn+4=",
-			"path": "github.com/drone/drone-cache-lib/archive/util",
-			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
-			"revisionTime": "2017-02-08T21:15:27Z"
-		},
-		{
-			"checksumSHA1": "09EDb6dUJZFCKY2XzNlzatbTylQ=",
-			"path": "github.com/drone/drone-cache-lib/cache",
-			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
-			"revisionTime": "2017-02-08T21:15:27Z"
-		},
-		{
-			"checksumSHA1": "JN4UDkuOVnh+haDClKr2Z7eH2zw=",
-			"path": "github.com/drone/drone-cache-lib/storage",
-			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
-			"revisionTime": "2017-02-08T21:15:27Z"
-		},
-		{
 			"checksumSHA1": "zkENTbOfU8YoxPfFwVAhTz516Dg=",
 			"path": "github.com/dustin/go-humanize",
 			"revision": "7a41df006ff9af79a29f0ffa9c5f21fbe6314a2d",
