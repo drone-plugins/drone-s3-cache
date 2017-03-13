@@ -61,7 +61,7 @@ func (p *Plugin) Exec() error {
 	}
 
 	if p.Mode == FlushMode {
-		log.Infof("Flushing cache items older then %s days at %s", p.FlushAge, path)
+		log.Infof("Flushing cache items older then %d days at %s", p.FlushAge, path)
 		f := cache.NewFlusher(p.Storage, genIsExpired(p.FlushAge))
 		err = f.Flush(p.FlushPath)
 
