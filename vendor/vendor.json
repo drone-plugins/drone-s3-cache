@@ -3,10 +3,46 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "cT6+XPBZiXsFbb7cXT6AYNrZyuM=",
+			"checksumSHA1": "NRonvQTe073YVead6//CQ5oVgK4=",
 			"path": "github.com/Sirupsen/logrus",
-			"revision": "3f603f494d61c73457fb234161d8982b9f0f0b71",
-			"revisionTime": "2017-02-07T18:34:08Z"
+			"revision": "1deb2db2a6fff8a35532079061b903c3a25eed52",
+			"revisionTime": "2017-03-08T20:36:35Z"
+		},
+		{
+			"checksumSHA1": "4rDSQtDNIhAjEtxyNtawRPoxQc0=",
+			"path": "github.com/drone/drone-cache-lib/archive",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "hRBkf4k9LKe33FMvr77blGO5s3E=",
+			"path": "github.com/drone/drone-cache-lib/archive/tar",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "ygrAO+JGTZatLTJwbwtuOU0PQHw=",
+			"path": "github.com/drone/drone-cache-lib/archive/tgz",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "cpUQ5oH5L/AxdsQpMSkDqIYkn+4=",
+			"path": "github.com/drone/drone-cache-lib/archive/util",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "09EDb6dUJZFCKY2XzNlzatbTylQ=",
+			"path": "github.com/drone/drone-cache-lib/cache",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
+		},
+		{
+			"checksumSHA1": "JN4UDkuOVnh+haDClKr2Z7eH2zw=",
+			"path": "github.com/drone/drone-cache-lib/storage",
+			"revision": "18ec7d875c688c571cf2174ad76251c784a58027",
+			"revisionTime": "2017-02-08T21:15:27Z"
 		},
 		{
 			"checksumSHA1": "zkENTbOfU8YoxPfFwVAhTz516Dg=",
@@ -51,10 +87,10 @@
 			"revisionTime": "2017-01-28T21:39:59Z"
 		},
 		{
-			"checksumSHA1": "uTQtOqR0ePMMcvuvAIksiIZxhqU=",
+			"checksumSHA1": "/oZpHfYc+ZgOwYAhlvcMhmETYpw=",
 			"path": "golang.org/x/sys/unix",
-			"revision": "7a6e5648d140666db5d920909e082ca00a87ba2c",
-			"revisionTime": "2017-02-01T04:15:14Z"
+			"revision": "99f16d856c9836c42d24e7ab64ea72916925fa97",
+			"revisionTime": "2017-03-08T15:04:45Z"
 		}
 	],
 	"rootPath": "github.com/drone-plugins/drone-s3-cache"
