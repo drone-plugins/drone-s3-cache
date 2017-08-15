@@ -12,7 +12,7 @@ go test
 
 ## Docker
 
-Build the docker image with the following commands:
+Build the Docker image with the following commands:
 
 ```
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
