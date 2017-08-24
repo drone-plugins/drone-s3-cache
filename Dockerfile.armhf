@@ -1,5 +1,5 @@
 FROM centurylink/ca-certs
 ENV GODEBUG=netdns=go
 
-ADD release/linux/amd64/drone-s3-cache /bin/
+ADD release/linux/arm/drone-s3-cache /bin/
 ENTRYPOINT ["/bin/drone-s3-cache"]

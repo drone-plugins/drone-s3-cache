@@ -3,10 +3,44 @@ workspace:
   path: src/github.com/drone-plugins/drone-s3-cache
 
 pipeline:
-  build:
-    image: golang:1.7
-    environment:
-      - CGO_ENABLED=0
+  test:
+    image: golang:1.8
     commands:
+      - go vet
       - go test -cover -coverprofile=coverage.out
-      - go build -ldflags "-s -w -X main.revision=$(git rev-parse HEAD)" -a
+
+  build:
+    image: golang:1.8
+    commands: sh .drone.sh
+    when:
+      branch: master
+      event: push
+
+  publish_linux_amd64:
+    image: plugins/docker
+    repo: plugins/s3-cache
+    tags: [ "latest", "1.1", "1" ]
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
+
+  publish_linux_armhf:
+    image: plugins/docker
+    repo: plugins/s3-cache
+    tags: [ "linux-arm" ]
+    dockerfile: Dockerfile.armhf
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
+
+  publish_linux_aarch64:
+    image: plugins/docker
+    repo: plugins/s3-cache
+    tags: [ "linux-arm64" ]
+    dockerfile: Dockerfile.aarch64
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
