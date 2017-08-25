@@ -18,6 +18,7 @@ pipeline:
 
   publish_linux_amd64:
     image: plugins/docker
+    group: tags
     repo: plugins/s3-cache
     tags: [ "latest", "1.1", "1" ]
     secrets: [ docker_username, docker_password ]
@@ -27,6 +28,7 @@ pipeline:
 
   publish_linux_armhf:
     image: plugins/docker
+    group: tags
     repo: plugins/s3-cache
     tags: [ "linux-arm" ]
     dockerfile: Dockerfile.armhf
@@ -37,6 +39,7 @@ pipeline:
 
   publish_linux_aarch64:
     image: plugins/docker
+    group: tags
     repo: plugins/s3-cache
     tags: [ "linux-arm64" ]
     dockerfile: Dockerfile.aarch64
