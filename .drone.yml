@@ -5,16 +5,15 @@ workspace:
 pipeline:
   test:
     image: golang:1.9
+    group: testing
     commands:
       - go vet
       - go test -cover -coverprofile=coverage.out
 
   build:
     image: golang:1.9
+    group: testing
     commands: sh .drone.sh
-    when:
-      branch: master
-      event: push
 
   publish_linux_amd64:
     image: plugins/docker
@@ -25,6 +24,7 @@ pipeline:
     when:
       branch: master
       event: push
+      status: success
 
   publish_linux_armhf:
     image: plugins/docker
@@ -36,6 +36,7 @@ pipeline:
     when:
       branch: master
       event: push
+      status: success
 
   publish_linux_aarch64:
     image: plugins/docker
@@ -47,3 +48,4 @@ pipeline:
     when:
       branch: master
       event: push
+      status: success
