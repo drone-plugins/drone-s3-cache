@@ -24,7 +24,6 @@ pipeline:
     when:
       branch: master
       event: push
-      status: success
 
   publish_linux_armhf:
     image: plugins/docker
@@ -36,7 +35,6 @@ pipeline:
     when:
       branch: master
       event: push
-      status: success
 
   publish_linux_aarch64:
     image: plugins/docker
@@ -48,4 +46,3 @@ pipeline:
     when:
       branch: master
       event: push
-      status: success
