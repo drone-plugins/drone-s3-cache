@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/drone/drone-cache-lib/storage"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
+	"github.com/drone/drone-cache-lib/storage"
 	"github.com/urfave/cli"
 )
 
@@ -20,7 +20,7 @@ func main() {
 	app.Name = "cache plugin"
 	app.Usage = "cache plugin"
 	app.Action = run
-	app.Version = fmt.Sprintf("1.0.%s", build)
+	app.Version = fmt.Sprintf("1.0.0+%s", build)
 	app.Flags = []cli.Flag{
 		// Cache information
 

@@ -3,10 +3,71 @@ workspace:
   path: src/github.com/drone-plugins/drone-s3-cache
 
 pipeline:
-  build:
-    image: golang:1.7
+  test:
+    image: golang:1.9
+    commands:
+      - go vet
+      - go test -cover -coverprofile=coverage.out
+
+  build_linux_amd64:
+    image: golang:1.9
+    group: build
     environment:
+      - GOOS=linux
+      - GOARCH=amd64
       - CGO_ENABLED=0
     commands:
-      - go test -cover -coverprofile=coverage.out
-      - go build -ldflags "-s -w -X main.revision=$(git rev-parse HEAD)" -a
+      - go build -v -ldflags "-X main.build=${DRONE_BUILD_NUMBER}" -a -tags netgo -o release/linux/amd64/drone-s3-cache
+
+  build_linux_arm64:
+    image: golang:1.9
+    group: build
+    environment:
+      - GOOS=linux
+      - GOARCH=arm64
+      - CGO_ENABLED=0
+    commands:
+      - go build -v -ldflags "-X main.build=${DRONE_BUILD_NUMBER}" -a -tags netgo -o release/linux/arm64/drone-s3-cache
+
+  build_linux_arm:
+    image: golang:1.9
+    group: build
+    environment:
+      - GOOS=linux
+      - GOARCH=arm
+      - CGO_ENABLED=0
+      - GOARM=7
+    commands:
+      - go build -v -ldflags "-X main.build=${DRONE_BUILD_NUMBER}" -a -tags netgo -o release/linux/arm/drone-s3-cache
+
+  publish_linux_amd64:
+    image: plugins/docker
+    group: tags
+    repo: plugins/s3-cache
+    tags: [ "latest", "1.1", "1" ]
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
+
+  publish_linux_armhf:
+    image: plugins/docker
+    group: tags
+    repo: plugins/s3-cache
+    tags: [ "linux-arm" ]
+    dockerfile: Dockerfile.armhf
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
+
+  publish_linux_aarch64:
+    image: plugins/docker
+    group: tags
+    repo: plugins/s3-cache
+    tags: [ "linux-arm64" ]
+    dockerfile: Dockerfile.aarch64
+    secrets: [ docker_username, docker_password ]
+    when:
+      branch: master
+      event: push
