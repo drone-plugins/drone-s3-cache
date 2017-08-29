@@ -95,17 +95,17 @@ func main() {
 		cli.StringFlag{
 			Name:   "server",
 			Usage:  "s3 server",
-			EnvVar: "PLUGIN_SERVER,CACHE_S3_SERVER",
+			EnvVar: "PLUGIN_SERVER,PLUGIN_ENDPOINT,CACHE_S3_ENDPOINT,CACHE_S3_SERVER,S3_ENDPOINT",
 		},
 		cli.StringFlag{
 			Name:   "access-key",
 			Usage:  "s3 access key",
-			EnvVar: "PLUGIN_ACCESS_KEY,CACHE_S3_ACCESS_KEY",
+			EnvVar: "PLUGIN_ACCESS_KEY,CACHE_S3_ACCESS_KEY,AWS_ACCESS_KEY_ID",
 		},
 		cli.StringFlag{
 			Name:   "secret-key",
 			Usage:  "s3 secret key",
-			EnvVar: "PLUGIN_SECRET_KEY,CACHE_S3_SECRET_KEY",
+			EnvVar: "PLUGIN_SECRET_KEY,CACHE_S3_SECRET_KEY,AWS_SECRET_ACCESS_KEY",
 		},
 	}
 
