@@ -24,6 +24,6 @@ _testmain.go
 *.prof
 .env
 
+release/*
 coverage.out
 drone-s3-cache
-release/*

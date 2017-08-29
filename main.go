@@ -20,7 +20,7 @@ func main() {
 	app.Name = "cache plugin"
 	app.Usage = "cache plugin"
 	app.Action = run
-	app.Version = fmt.Sprintf("1.0.0+%s", build)
+	app.Version = fmt.Sprintf("1.1.0+%s", build)
 	app.Flags = []cli.Flag{
 		// Cache information
 
