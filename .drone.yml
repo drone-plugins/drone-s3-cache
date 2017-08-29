@@ -5,15 +5,40 @@ workspace:
 pipeline:
   test:
     image: golang:1.9
-    group: testing
     commands:
       - go vet
       - go test -cover -coverprofile=coverage.out
 
-  build:
+  build_linux_amd64:
     image: golang:1.9
-    group: testing
-    commands: sh .drone.sh
+    group: build
+    environment:
+      - GOOS=linux
+      - GOARCH=amd64
+      - CGO_ENABLED=0
+    commands:
+      - go build -v -ldflags "-X main.build=${DRONE_BUILD_NUMBER}" -a -tags netgo -o release/linux/amd64/drone-s3-cache
+
+  build_linux_arm64:
+    image: golang:1.9
+    group: build
+    environment:
+      - GOOS=linux
+      - GOARCH=arm64
+      - CGO_ENABLED=0
+    commands:
+      - go build -v -ldflags "-X main.build=${DRONE_BUILD_NUMBER}" -a -tags netgo -o release/linux/arm64/drone-s3-cache
+
+  build_linux_arm:
+    image: golang:1.9
+    group: build
+    environment:
+      - GOOS=linux
+      - GOARCH=arm
+      - CGO_ENABLED=0
+      - GOARM=7
+    commands:
+      - go build -v -ldflags "-X main.build=${DRONE_BUILD_NUMBER}" -a -tags netgo -o release/linux/arm/drone-s3-cache
 
   publish_linux_amd64:
     image: plugins/docker
