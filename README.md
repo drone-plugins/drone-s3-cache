@@ -1,5 +1,6 @@
 # drone-s3-cache
-Caches build artifacts to S3 compatible storage backends
+
+Drone plugin to build artifacts to S3 compatible storage backends. For the usage information and a listing of the available options please take a look at the [docs](./DOCS.md).
 
 ## Build
 
