@@ -4,11 +4,12 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/drone/drone-cache-lib/archive/util"
 	"github.com/drone/drone-cache-lib/cache"
 	"github.com/drone/drone-cache-lib/storage"
-	"github.com/drone/drone-cache-lib/archive/util"
 )
 
+// Plugin structure
 type Plugin struct {
 	Filename     string
 	Path         string
@@ -22,8 +23,11 @@ type Plugin struct {
 }
 
 const (
+	// RestoreMode for resotre mode string
 	RestoreMode = "restore"
+	// RebuildMode for rebuild mode string
 	RebuildMode = "rebuild"
+	// FlushMode for flush mode string
 	FlushMode = "flush"
 )
 
@@ -76,6 +80,6 @@ func (p *Plugin) Exec() error {
 func genIsExpired(age int) cache.DirtyFunc {
 	return func(file storage.FileEntry) bool {
 		// Check if older then "age" days
-		return file.LastModified.Before(time.Now().AddDate(0, 0, age * -1))
+		return file.LastModified.Before(time.Now().AddDate(0, 0, age*-1))
 	}
 }
