@@ -42,7 +42,7 @@ type s3Storage struct {
 	opts   *Options
 }
 
-// NewS3Storage creates an implementation of Storage with S3 as the backend.
+// New method creates an implementation of Storage with S3 as the backend.
 func New(opts *Options) (storage.Storage, error) {
 	client, err := minio.New(opts.Endpoint, opts.Access, opts.Secret, opts.UseSSL)
 
@@ -151,13 +151,13 @@ func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 	objectCh := s.client.ListObjectsV2(bucket, key, isRecursive, doneCh)
 	for object := range objectCh {
 		if object.Err != nil {
-			return nil, fmt.Errorf("Failed to retreive object %s: %s", object.Key, object.Err)
+			return nil, fmt.Errorf("Failed to retrieve object %s: %s", object.Key, object.Err)
 		}
 
 		path := bucket + "/" + object.Key
 		objects = append(objects, storage.FileEntry{
-			Path: path,
-			Size: object.Size,
+			Path:         path,
+			Size:         object.Size,
 			LastModified: object.LastModified,
 		})
 		log.Debugf("Found object %s: Path=%s Size=%s LastModified=%s", object.Key, path, object.Size, object.LastModified)
