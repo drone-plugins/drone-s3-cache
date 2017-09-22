@@ -65,6 +65,11 @@ func main() {
 			EnvVar: "PLUGIN_FLUSH_AGE",
 			Value:  "30",
 		},
+		cli.StringFlag{
+			Name:   "flush_path",
+			Usage:  "path to search for flushable cache files",
+			EnvVar: "PLUGIN_FLUSH_PATH",
+		},
 		cli.BoolFlag{
 			Name:   "debug",
 			Usage:  "debug plugin output",
