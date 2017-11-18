@@ -71,7 +71,7 @@ func (s *s3Storage) Get(p string, dst io.Writer) error {
 		return err
 	}
 
-	object, err := s.client.GetObject(bucket, key)
+	object, err := s.client.GetObject(bucket, key, minio.GetObjectOptions{})
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func (s *s3Storage) Put(p string, src io.Reader) error {
 
 	log.Infof("Putting file in %s at %s", bucket, key)
 
-	numBytes, err := s.client.PutObject(bucket, key, src, "application/tar")
+	numBytes, err := s.client.PutObject(bucket, key, src, -1, minio.PutObjectOptions{ContentType: "application/tar"})
 
 	if err != nil {
 		return err
