@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015, 2016 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +18,7 @@
 package minio
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 	"strings"
@@ -28,13 +30,14 @@ import (
 // BucketExists verify if bucket exists and you have permission to access it.
 func (c Client) BucketExists(bucketName string) (bool, error) {
 	// Input validation.
-	if err := isValidBucketName(bucketName); err != nil {
+	if err := s3utils.CheckValidBucketName(bucketName); err != nil {
 		return false, err
 	}
 
 	// Execute HEAD on bucketName.
-	resp, err := c.executeMethod("HEAD", requestMetadata{
-		bucketName: bucketName,
+	resp, err := c.executeMethod(context.Background(), "HEAD", requestMetadata{
+		bucketName:       bucketName,
+		contentSHA256Hex: emptySHA256Hex,
 	})
 	defer closeResponse(resp)
 	if err != nil {
@@ -54,11 +57,13 @@ func (c Client) BucketExists(bucketName string) (bool, error) {
 // List of header keys to be filtered, usually
 // from all S3 API http responses.
 var defaultFilterKeys = []string{
+	"Connection",
 	"Transfer-Encoding",
 	"Accept-Ranges",
 	"Date",
 	"Server",
 	"Vary",
+	"x-amz-bucket-region",
 	"x-amz-request-id",
 	"x-amz-id-2",
 	// Add new headers to be ignored.
@@ -77,19 +82,33 @@ func extractObjMetadata(header http.Header) http.Header {
 }
 
 // StatObject verifies if object exists and you have permission to access.
-func (c Client) StatObject(bucketName, objectName string) (ObjectInfo, error) {
+func (c Client) StatObject(bucketName, objectName string, opts StatObjectOptions) (ObjectInfo, error) {
 	// Input validation.
-	if err := isValidBucketName(bucketName); err != nil {
+	if err := s3utils.CheckValidBucketName(bucketName); err != nil {
 		return ObjectInfo{}, err
 	}
-	if err := isValidObjectName(objectName); err != nil {
+	if err := s3utils.CheckValidObjectName(objectName); err != nil {
+		return ObjectInfo{}, err
+	}
+	return c.statObject(bucketName, objectName, opts)
+}
+
+// Lower level API for statObject supporting pre-conditions and range headers.
+func (c Client) statObject(bucketName, objectName string, opts StatObjectOptions) (ObjectInfo, error) {
+	// Input validation.
+	if err := s3utils.CheckValidBucketName(bucketName); err != nil {
+		return ObjectInfo{}, err
+	}
+	if err := s3utils.CheckValidObjectName(objectName); err != nil {
 		return ObjectInfo{}, err
 	}
 
 	// Execute HEAD on objectName.
-	resp, err := c.executeMethod("HEAD", requestMetadata{
-		bucketName: bucketName,
-		objectName: objectName,
+	resp, err := c.executeMethod(context.Background(), "HEAD", requestMetadata{
+		bucketName:       bucketName,
+		objectName:       objectName,
+		contentSHA256Hex: emptySHA256Hex,
+		customHeader:     opts.Header(),
 	})
 	defer closeResponse(resp)
 	if err != nil {
@@ -105,12 +124,13 @@ func (c Client) StatObject(bucketName, objectName string) (ObjectInfo, error) {
 	md5sum := strings.TrimPrefix(resp.Header.Get("ETag"), "\"")
 	md5sum = strings.TrimSuffix(md5sum, "\"")
 
-	// Content-Length is not valid for Google Cloud Storage, do not verify.
+	// Parse content length is exists
 	var size int64 = -1
-	if !s3utils.IsGoogleEndpoint(c.endpointURL) {
-		// Parse content length.
-		size, err = strconv.ParseInt(resp.Header.Get("Content-Length"), 10, 64)
+	contentLengthStr := resp.Header.Get("Content-Length")
+	if contentLengthStr != "" {
+		size, err = strconv.ParseInt(contentLengthStr, 10, 64)
 		if err != nil {
+			// Content-Length is not valid
 			return ObjectInfo{}, ErrorResponse{
 				Code:       "InternalError",
 				Message:    "Content-Length is invalid. " + reportIssue,
@@ -122,6 +142,7 @@ func (c Client) StatObject(bucketName, objectName string) (ObjectInfo, error) {
 			}
 		}
 	}
+
 	// Parse Last-Modified has http time format.
 	date, err := time.Parse(http.TimeFormat, resp.Header.Get("Last-Modified"))
 	if err != nil {
@@ -135,16 +156,12 @@ func (c Client) StatObject(bucketName, objectName string) (ObjectInfo, error) {
 			Region:     resp.Header.Get("x-amz-bucket-region"),
 		}
 	}
+
 	// Fetch content type if any present.
 	contentType := strings.TrimSpace(resp.Header.Get("Content-Type"))
 	if contentType == "" {
 		contentType = "application/octet-stream"
 	}
-
-	// Extract only the relevant header keys describing the object.
-	// following function filters out a list of standard set of keys
-	// which are not part of object metadata.
-	metadata := extractObjMetadata(resp.Header)
 
 	// Save object metadata info.
 	return ObjectInfo{
@@ -153,6 +170,9 @@ func (c Client) StatObject(bucketName, objectName string) (ObjectInfo, error) {
 		Size:         size,
 		LastModified: date,
 		ContentType:  contentType,
-		Metadata:     metadata,
+		// Extract only the relevant header keys describing the object.
+		// following function filters out a list of standard set of keys
+		// which are not part of object metadata.
+		Metadata: extractObjMetadata(resp.Header),
 	}, nil
 }

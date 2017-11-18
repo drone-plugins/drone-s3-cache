@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -583,7 +584,7 @@ func GetPolicies(statements []Statement, bucketName string) map[string]BucketPol
 			r = r[:len(r)-1]
 			asterisk = "*"
 		}
-		objectPath := r[len(awsResourcePrefix+bucketName)+1 : len(r)]
+		objectPath := r[len(awsResourcePrefix+bucketName)+1:]
 		p := GetPolicy(statements, bucketName, objectPath)
 		policyRules[bucketName+"/"+objectPath+asterisk] = p
 	}
