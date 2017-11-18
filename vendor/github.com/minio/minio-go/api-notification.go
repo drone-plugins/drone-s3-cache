@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2016 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +19,7 @@ package minio
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -30,7 +32,7 @@ import (
 // GetBucketNotification - get bucket notification at a given path.
 func (c Client) GetBucketNotification(bucketName string) (bucketNotification BucketNotification, err error) {
 	// Input validation.
-	if err := isValidBucketName(bucketName); err != nil {
+	if err := s3utils.CheckValidBucketName(bucketName); err != nil {
 		return BucketNotification{}, err
 	}
 	notification, err := c.getBucketNotification(bucketName)
@@ -46,9 +48,10 @@ func (c Client) getBucketNotification(bucketName string) (BucketNotification, er
 	urlValues.Set("notification", "")
 
 	// Execute GET on bucket to list objects.
-	resp, err := c.executeMethod("GET", requestMetadata{
-		bucketName:  bucketName,
-		queryValues: urlValues,
+	resp, err := c.executeMethod(context.Background(), "GET", requestMetadata{
+		bucketName:       bucketName,
+		queryValues:      urlValues,
+		contentSHA256Hex: emptySHA256Hex,
 	})
 
 	defer closeResponse(resp)
@@ -102,6 +105,14 @@ type eventMeta struct {
 	Object          objectMeta `json:"object"`
 }
 
+// sourceInfo represents information on the client that
+// triggered the event notification.
+type sourceInfo struct {
+	Host      string `json:"host"`
+	Port      string `json:"port"`
+	UserAgent string `json:"userAgent"`
+}
+
 // NotificationEvent represents an Amazon an S3 bucket notification event.
 type NotificationEvent struct {
 	EventVersion      string            `json:"eventVersion"`
@@ -113,6 +124,7 @@ type NotificationEvent struct {
 	RequestParameters map[string]string `json:"requestParameters"`
 	ResponseElements  map[string]string `json:"responseElements"`
 	S3                eventMeta         `json:"s3"`
+	Source            sourceInfo        `json:"source"`
 }
 
 // NotificationInfo - represents the collection of notification events, additionally
@@ -130,7 +142,7 @@ func (c Client) ListenBucketNotification(bucketName, prefix, suffix string, even
 		defer close(notificationInfoCh)
 
 		// Validate the bucket name.
-		if err := isValidBucketName(bucketName); err != nil {
+		if err := s3utils.CheckValidBucketName(bucketName); err != nil {
 			notificationInfoCh <- NotificationInfo{
 				Err: err,
 			}
@@ -140,12 +152,12 @@ func (c Client) ListenBucketNotification(bucketName, prefix, suffix string, even
 		// Check ARN partition to verify if listening bucket is supported
 		if s3utils.IsAmazonEndpoint(c.endpointURL) || s3utils.IsGoogleEndpoint(c.endpointURL) {
 			notificationInfoCh <- NotificationInfo{
-				Err: ErrAPINotSupported("Listening bucket notification is specific only to `minio` partitions"),
+				Err: ErrAPINotSupported("Listening for bucket notification is specific only to `minio` server endpoints"),
 			}
 			return
 		}
 
-		// Continously run and listen on bucket notification.
+		// Continuously run and listen on bucket notification.
 		// Create a done channel to control 'ListObjects' go routine.
 		retryDoneCh := make(chan struct{}, 1)
 
@@ -160,12 +172,16 @@ func (c Client) ListenBucketNotification(bucketName, prefix, suffix string, even
 			urlValues["events"] = events
 
 			// Execute GET on bucket to list objects.
-			resp, err := c.executeMethod("GET", requestMetadata{
-				bucketName:  bucketName,
-				queryValues: urlValues,
+			resp, err := c.executeMethod(context.Background(), "GET", requestMetadata{
+				bucketName:       bucketName,
+				queryValues:      urlValues,
+				contentSHA256Hex: emptySHA256Hex,
 			})
 			if err != nil {
-				continue
+				notificationInfoCh <- NotificationInfo{
+					Err: err,
+				}
+				return
 			}
 
 			// Validate http response, upon error return quickly.

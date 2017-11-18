@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +34,7 @@ var awsS3EndpointMap = map[string]string{
 	"ap-northeast-1": "s3-ap-northeast-1.amazonaws.com",
 	"ap-northeast-2": "s3-ap-northeast-2.amazonaws.com",
 	"sa-east-1":      "s3-sa-east-1.amazonaws.com",
+	"us-gov-west-1":  "s3-us-gov-west-1.amazonaws.com",
 	"cn-north-1":     "s3.cn-north-1.amazonaws.com.cn",
 }
 

@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +21,40 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/minio/minio-go/pkg/encrypt"
+
+	"context"
+
+	"github.com/minio/minio-go/pkg/s3utils"
 )
 
+// FGetObjectWithContext - download contents of an object to a local file.
+// The options can be used to specify the GET request further.
+func (c Client) FGetObjectWithContext(ctx context.Context, bucketName, objectName, filePath string, opts GetObjectOptions) error {
+	return c.fGetObjectWithContext(ctx, bucketName, objectName, filePath, opts)
+}
+
 // FGetObject - download contents of an object to a local file.
-func (c Client) FGetObject(bucketName, objectName, filePath string) error {
+func (c Client) FGetObject(bucketName, objectName, filePath string, opts GetObjectOptions) error {
+	return c.fGetObjectWithContext(context.Background(), bucketName, objectName, filePath, opts)
+}
+
+// FGetEncryptedObject - Decrypt and store an object at filePath.
+func (c Client) FGetEncryptedObject(bucketName, objectName, filePath string, materials encrypt.Materials) error {
+	if materials == nil {
+		return ErrInvalidArgument("Unable to recognize empty encryption properties")
+	}
+	return c.FGetObject(bucketName, objectName, filePath, GetObjectOptions{Materials: materials})
+}
+
+// fGetObjectWithContext - fgetObject wrapper function with context
+func (c Client) fGetObjectWithContext(ctx context.Context, bucketName, objectName, filePath string, opts GetObjectOptions) error {
 	// Input validation.
-	if err := isValidBucketName(bucketName); err != nil {
+	if err := s3utils.CheckValidBucketName(bucketName); err != nil {
 		return err
 	}
-	if err := isValidObjectName(objectName); err != nil {
+	if err := s3utils.CheckValidObjectName(objectName); err != nil {
 		return err
 	}
 
@@ -58,7 +84,7 @@ func (c Client) FGetObject(bucketName, objectName, filePath string) error {
 	}
 
 	// Gather md5sum.
-	objectStat, err := c.StatObject(bucketName, objectName)
+	objectStat, err := c.StatObject(bucketName, objectName, StatObjectOptions{opts})
 	if err != nil {
 		return err
 	}
@@ -78,8 +104,14 @@ func (c Client) FGetObject(bucketName, objectName, filePath string) error {
 		return err
 	}
 
+	// Initialize get object request headers to set the
+	// appropriate range offsets to read from.
+	if st.Size() > 0 {
+		opts.SetRange(st.Size(), 0)
+	}
+
 	// Seek to current position for incoming reader.
-	objectReader, objectStat, err := c.getObject(bucketName, objectName, st.Size(), 0)
+	objectReader, objectStat, err := c.getObject(ctx, bucketName, objectName, opts)
 	if err != nil {
 		return err
 	}

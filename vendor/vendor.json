@@ -3,10 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "NRonvQTe073YVead6//CQ5oVgK4=",
+			"checksumSHA1": "9cl7+wv0GvxpQV+HOtV93F9pbmE=",
 			"path": "github.com/Sirupsen/logrus",
-			"revision": "1deb2db2a6fff8a35532079061b903c3a25eed52",
-			"revisionTime": "2017-03-08T20:36:35Z"
+			"revision": "89742aefa4b206dcf400792f3bd35b542998eb3b",
+			"revisionTime": "2017-08-22T13:27:46Z"
 		},
 		{
 			"checksumSHA1": "4rDSQtDNIhAjEtxyNtawRPoxQc0=",
@@ -45,52 +45,88 @@
 			"revisionTime": "2017-02-08T21:15:27Z"
 		},
 		{
-			"checksumSHA1": "zkENTbOfU8YoxPfFwVAhTz516Dg=",
+			"checksumSHA1": "tJd2T/eyW6ejAev7WzGxTeUVOPQ=",
 			"path": "github.com/dustin/go-humanize",
-			"revision": "7a41df006ff9af79a29f0ffa9c5f21fbe6314a2d",
-			"revisionTime": "2017-01-10T07:11:07Z"
+			"revision": "bb3d318650d48840a39aa21a027c6630e198e626",
+			"revisionTime": "2017-11-10T20:55:13Z"
 		},
 		{
-			"checksumSHA1": "REZco0yp6g2pwSh7jum40abYpXc=",
+			"checksumSHA1": "vG2EwaBKjgb+XShJIO9h9lyulLI=",
+			"path": "github.com/go-ini/ini",
+			"revision": "7e7da451323b6766da368f8a1e8ec9a88a16b4a0",
+			"revisionTime": "2017-11-14T01:13:26Z"
+		},
+		{
+			"checksumSHA1": "q8VfSvQ6fZY+QwtlMPtQsJrNews=",
+			"path": "github.com/minio/go-homedir",
+			"revision": "21304a94172ae3a09dee2cd86a12fb6f842138c7",
+			"revisionTime": "2016-02-15T11:55:11Z"
+		},
+		{
+			"checksumSHA1": "aVA/2gF/5t43l4wOn3isP1o88vw=",
 			"path": "github.com/minio/minio-go",
-			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
-			"revisionTime": "2017-02-06T22:42:59Z"
+			"revision": "9a9f8cb9f5946200b7f0b223d97725b30876bb00",
+			"revisionTime": "2017-11-17T22:21:12Z"
 		},
 		{
-			"checksumSHA1": "neH34/65OXeKHM/MlV8MbhcdFBc=",
+			"checksumSHA1": "G71RqFRLkYxpK1jy3x715FSgxZI=",
+			"path": "github.com/minio/minio-go/pkg/credentials",
+			"revision": "9a9f8cb9f5946200b7f0b223d97725b30876bb00",
+			"revisionTime": "2017-11-17T22:21:12Z"
+		},
+		{
+			"checksumSHA1": "DdSxg5v4/umyYXj8MEB7vYW7Dg8=",
+			"path": "github.com/minio/minio-go/pkg/encrypt",
+			"revision": "9a9f8cb9f5946200b7f0b223d97725b30876bb00",
+			"revisionTime": "2017-11-17T22:21:12Z"
+		},
+		{
+			"checksumSHA1": "1dtf5fWjSL+1HqECT3/fPFr/a3M=",
 			"path": "github.com/minio/minio-go/pkg/policy",
-			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
-			"revisionTime": "2017-02-06T22:42:59Z"
+			"revision": "9a9f8cb9f5946200b7f0b223d97725b30876bb00",
+			"revisionTime": "2017-11-17T22:21:12Z"
 		},
 		{
-			"checksumSHA1": "m/6/na9lVtamkfmIdIOi5pdccgw=",
+			"checksumSHA1": "fL4piWQqcamdYbJ5/I3eEZkN3Ik=",
 			"path": "github.com/minio/minio-go/pkg/s3signer",
-			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
-			"revisionTime": "2017-02-06T22:42:59Z"
+			"revision": "9a9f8cb9f5946200b7f0b223d97725b30876bb00",
+			"revisionTime": "2017-11-17T22:21:12Z"
 		},
 		{
-			"checksumSHA1": "gRnCFKb4x83GBLVUZXoOjujd+U0=",
+			"checksumSHA1": "OYy96/Zzl36M9beRAXwc2Q3DcAg=",
 			"path": "github.com/minio/minio-go/pkg/s3utils",
-			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
-			"revisionTime": "2017-02-06T22:42:59Z"
+			"revision": "9a9f8cb9f5946200b7f0b223d97725b30876bb00",
+			"revisionTime": "2017-11-17T22:21:12Z"
 		},
 		{
-			"checksumSHA1": "maUy+dbN6VfTTnfErrAW2lLit1w=",
+			"checksumSHA1": "Wt8ej+rZXTdNBR9Xyw1eGo3Iq5o=",
 			"path": "github.com/minio/minio-go/pkg/set",
-			"revision": "dcaae9ec4d0b0a81d17f22f6d7a186491f6a55ec",
-			"revisionTime": "2017-02-06T22:42:59Z"
+			"revision": "9a9f8cb9f5946200b7f0b223d97725b30876bb00",
+			"revisionTime": "2017-11-17T22:21:12Z"
 		},
 		{
-			"checksumSHA1": "1keN4Q9F8uHk/Gt5YXG0oCEecKM=",
+			"checksumSHA1": "uJI6eTV5WTQC57b+1OaQmQH7oLI=",
 			"path": "github.com/urfave/cli",
-			"revision": "347a9884a87374d000eec7e6445a34487c1f4a2b",
-			"revisionTime": "2017-01-28T21:39:59Z"
+			"revision": "7ace96b43d4bdc46f81d0d1219742b2469874cf6",
+			"revisionTime": "2017-11-16T04:56:12Z"
 		},
 		{
-			"checksumSHA1": "/oZpHfYc+ZgOwYAhlvcMhmETYpw=",
+			"checksumSHA1": "5Yb2z6UO+Arm/TEd+OEtdnwOt1A=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "9f005a07e0d31d45e6656d241bb5c0f2efd4bc94",
+			"revisionTime": "2017-09-21T17:41:56Z"
+		},
+		{
+			"checksumSHA1": "B2t4JjkjyoUINOnKXviNypvgWpo=",
 			"path": "golang.org/x/sys/unix",
-			"revision": "99f16d856c9836c42d24e7ab64ea72916925fa97",
-			"revisionTime": "2017-03-08T15:04:45Z"
+			"revision": "0dd5e194bbf5eb84a39666eb4c98a4d007e4203a",
+			"revisionTime": "2017-11-16T07:26:13Z"
+		},
+		{
+			"checksumSHA1": "tSUO/Ma1BMDU/HU93X52jLkod7M=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "0dd5e194bbf5eb84a39666eb4c98a4d007e4203a",
+			"revisionTime": "2017-11-16T07:26:13Z"
 		}
 	],
 	"rootPath": "github.com/drone-plugins/drone-s3-cache"
