@@ -260,10 +260,6 @@ func s3Storage(c *cli.Context) (storage.Storage, error) {
 	access := c.String("access-key")
 	secret := c.String("secret-key")
 
-	if len(access) == 0 || len(secret) == 0 {
-		return nil, fmt.Errorf("No access credentials provided")
-	}
-
 	return s3.New(&s3.Options{
 		Endpoint: endpoint,
 		Access:   access,
