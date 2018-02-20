@@ -198,7 +198,7 @@ func run(c *cli.Context) error {
 	// Get the flush path to flush the cache files from
 	flushPath := c.GlobalString("flush_path")
 
-	// Defaults to <owner>/<repo>/master/
+	// Defaults to <owner>/<repo>/
 	if len(flushPath) == 0 {
 		log.Info("No flush_path specified. Creating default")
 
