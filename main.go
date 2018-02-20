@@ -30,6 +30,11 @@ func main() {
 			EnvVar: "PLUGIN_FILENAME",
 		},
 		cli.StringFlag{
+			Name:   "root",
+			Usage:  "root",
+			EnvVar: "PLUGIN_ROOT",
+		},
+		cli.StringFlag{
 			Name:   "path",
 			Usage:  "path",
 			EnvVar: "PLUGIN_PATH",
@@ -154,6 +159,9 @@ func run(c *cli.Context) error {
 		mode = RestoreMode
 	}
 
+	// Get the root path prefix to place the cache files
+	root := c.GlobalString("root")
+
 	// Get the path to place the cache files
 	path := c.GlobalString("path")
 
@@ -162,11 +170,13 @@ func run(c *cli.Context) error {
 		log.Info("No path specified. Creating default")
 
 		path = fmt.Sprintf(
-			"/%s/%s/%s/",
+			"%s/%s/%s/",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 			c.String("commit.branch"),
 		)
+
+		path = prefixRoot(root, path)
 	}
 
 	// Get the fallback path to retrieve the cache files
@@ -177,10 +187,12 @@ func run(c *cli.Context) error {
 		log.Info("No fallback_path specified. Creating default")
 
 		fallbackPath = fmt.Sprintf(
-			"/%s/%s/master/",
+			"%s/%s/master/",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 		)
+
+		fallbackPath = prefixRoot(root, fallbackPath)
 	}
 
 	// Get the flush path to flush the cache files from
@@ -191,10 +203,12 @@ func run(c *cli.Context) error {
 		log.Info("No flush_path specified. Creating default")
 
 		flushPath = fmt.Sprintf(
-			"/%s/%s/",
+			"%s/%s/",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 		)
+
+		flushPath = prefixRoot(root, flushPath)
 	}
 
 	// Get the filename
@@ -281,4 +295,12 @@ func isMultipleModes(bools ...bool) bool {
 	}
 
 	return false
+}
+
+func prefixRoot(root, path string) string {
+	if len(root) > 0 {
+		return fmt.Sprintf("/%s/%s", root, path)
+	}
+
+	return fmt.Sprintf("/%s", path)
 }
