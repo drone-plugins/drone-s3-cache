@@ -1,11 +1,12 @@
-FROM microsoft/nanoserver:latest
-MAINTAINER Drone.IO Community <drone-dev@googlegroups.com>
+# escape=`
+FROM microsoft/nanoserver:10.0.14393.1593
 
-LABEL org.label-schema.version=latest
-LABEL org.label-schema.vcs-url="https://github.com/drone-plugins/drone-s3-cache.git"
-LABEL org.label-schema.name="Drone S3 Cache"
-LABEL org.label-schema.vendor="Drone.IO Community"
-LABEL org.label-schema.schema-version="1.0"
+LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" `
+  org.label-schema.name="Drone S3 Cache" `
+  org.label-schema.vendor="Drone.IO Community" `
+  org.label-schema.schema-version="1.0"
 
-ADD release/windows/amd64/drone-s3-cache /bin/
-ENTRYPOINT [ "/bin/drone-s3-cache" ]
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+ADD release\drone-s3-cache.exe c:\drone-s3-cache.exe
+ENTRYPOINT [ "c:\\drone-s3-cache.exe" ]
