@@ -46,12 +46,12 @@ type s3Storage struct {
 // New method creates an implementation of Storage with S3 as the backend.
 func New(opts *Options) (storage.Storage, error) {
 	var creds *credentials.Credentials
-	if (len(opts.Access) != 0 && len(opts.Secret) != 0){
+	if len(opts.Access) != 0 && len(opts.Secret) != 0 {
 		creds = credentials.NewStaticV4(opts.Access, opts.Secret, "")
 	} else {
 		creds = credentials.NewIAM("")
 	}
-	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, "")
+	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, opts.Region)
 
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (s *s3Storage) Put(p string, src io.Reader) error {
 	}
 
 	if !exists {
-		if err =s.client.MakeBucket(bucket, s.opts.Region); err != nil {
+		if err = s.client.MakeBucket(bucket, s.opts.Region); err != nil {
 			return err
 		}
 		log.Infof("Bucket %s created", bucket)
