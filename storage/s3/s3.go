@@ -9,7 +9,6 @@ import (
 	"github.com/drone/drone-cache-lib/storage"
 	"github.com/dustin/go-humanize"
 	"github.com/minio/minio-go"
-	"github.com/minio/minio-go/pkg/credentials"
 )
 
 // Options contains configuration for the S3 connection.
@@ -45,13 +44,14 @@ type s3Storage struct {
 
 // New method creates an implementation of Storage with S3 as the backend.
 func New(opts *Options) (storage.Storage, error) {
-	var creds *credentials.Credentials
-	if len(opts.Access) != 0 && len(opts.Secret) != 0 {
-		creds = credentials.NewStaticV4(opts.Access, opts.Secret, "")
-	} else {
-		creds = credentials.NewIAM("")
-	}
-	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, opts.Region)
+	// var creds *credentials.Credentials
+	// if len(opts.Access) != 0 && len(opts.Secret) != 0 {
+	// 	creds = credentials.NewStaticV4(opts.Access, opts.Secret, "")
+	// } else {
+	// 	creds = credentials.NewIAM("")
+	// }
+	// client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, opts.Region)
+	client, err := minio.NewWithRegion(opts.Endpoint, opts.Access, opts.Secret, opts.UseSSL, opts.Region)
 
 	if err != nil {
 		return nil, err
