@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/Sirupsen/logrus"
-  packages = ["."]
-  revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
-  version = "v1.0.5"
-
-[[projects]]
   branch = "master"
   name = "github.com/drone/drone-cache-lib"
   packages = [
@@ -18,7 +12,7 @@
     "cache",
     "storage"
   ]
-  revision = "18ec7d875c688c571cf2174ad76251c784a58027"
+  revision = "5fc17dfa3c5b06eed5cc6862625b6f86cb97363b"
 
 [[projects]]
   branch = "master"
@@ -29,14 +23,8 @@
 [[projects]]
   name = "github.com/go-ini/ini"
   packages = ["."]
-  revision = "6333e38ac20b8949a8dd68baa3650f4dee8f39f0"
-  version = "v1.33.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/minio/go-homedir"
-  packages = ["."]
-  revision = "4d76aabb80b22bad8695d3904e943f1fb5e6199f"
+  revision = "ace140f73450505f33e8b8418216792275ae82a7"
+  version = "v1.35.0"
 
 [[projects]]
   name = "github.com/minio/minio-go"
@@ -44,13 +32,24 @@
     ".",
     "pkg/credentials",
     "pkg/encrypt",
-    "pkg/policy",
     "pkg/s3signer",
     "pkg/s3utils",
     "pkg/set"
   ]
-  revision = "5ca66c9a35ba1cd674484be99dc97aa0973afe12"
-  version = "v3.0.0"
+  revision = "3d2d02921f0510e9d1f66ef77a265b8dddd36992"
+  version = "6.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/mitchellh/go-homedir"
+  packages = ["."]
+  revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
+
+[[projects]]
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
+  version = "v1.0.5"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -61,8 +60,21 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["ssh/terminal"]
-  revision = "374053ea96cb300f8671b8d3b07edeeb06e203b4"
+  packages = [
+    "argon2",
+    "blake2b",
+    "ssh/terminal"
+  ]
+  revision = "d6449816ce06963d9d136eee5a56fca5b0616e7e"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = [
+    "idna",
+    "lex/httplex"
+  ]
+  revision = "a35a21de978d84ffc92f010a153705b170b2f9d1"
 
 [[projects]]
   branch = "master"
@@ -71,11 +83,32 @@
     "unix",
     "windows"
   ]
-  revision = "2f1e207ee39ff70f3433e49c6eb52677a515e3b5"
+  revision = "2f57af4873d00d535c5c9028850aa2152e6a5566"
+
+[[projects]]
+  name = "golang.org/x/text"
+  packages = [
+    "collate",
+    "collate/build",
+    "internal/colltab",
+    "internal/gen",
+    "internal/tag",
+    "internal/triegen",
+    "internal/ucd",
+    "language",
+    "secure/bidirule",
+    "transform",
+    "unicode/bidi",
+    "unicode/cldr",
+    "unicode/norm",
+    "unicode/rangetable"
+  ]
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dc2cd56b5ddf484a66121fc7abe871b2bf315621e5bc61e1c37993425d5f27e9"
+  inputs-digest = "2c93a33252b85ec1da52c0ccf8cbf5f5e4c5b1e7ff55db12a995bb2504454e13"
   solver-name = "gps-cdcl"
   solver-version = 1
