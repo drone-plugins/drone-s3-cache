@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	pathutil "path"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
@@ -31,6 +32,11 @@ func main() {
 			Name:   "filename",
 			Usage:  "Filename for the cache",
 			EnvVar: "PLUGIN_FILENAME",
+		},
+		cli.StringFlag{
+			Name:   "root",
+			Usage:  "root",
+			EnvVar: "PLUGIN_ROOT",
 		},
 		cli.StringFlag{
 			Name:   "path",
@@ -157,6 +163,9 @@ func run(c *cli.Context) error {
 		mode = RestoreMode
 	}
 
+	// Get the root path prefix to place the cache files
+	root := c.GlobalString("root")
+
 	// Get the path to place the cache files
 	path := c.GlobalString("path")
 
@@ -165,11 +174,13 @@ func run(c *cli.Context) error {
 		log.Info("No path specified. Creating default")
 
 		path = fmt.Sprintf(
-			"/%s/%s/%s/",
+			"%s/%s/%s/",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 			c.String("commit.branch"),
 		)
+
+		path = prefixRoot(root, path)
 	}
 
 	// Get the fallback path to retrieve the cache files
@@ -180,24 +191,28 @@ func run(c *cli.Context) error {
 		log.Info("No fallback_path specified. Creating default")
 
 		fallbackPath = fmt.Sprintf(
-			"/%s/%s/master/",
+			"%s/%s/master/",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 		)
+
+		fallbackPath = prefixRoot(root, fallbackPath)
 	}
 
 	// Get the flush path to flush the cache files from
 	flushPath := c.GlobalString("flush_path")
 
-	// Defaults to <owner>/<repo>/master/
+	// Defaults to <owner>/<repo>/
 	if len(flushPath) == 0 {
 		log.Info("No flush_path specified. Creating default")
 
 		flushPath = fmt.Sprintf(
-			"/%s/%s/",
+			"%s/%s/",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 		)
+
+		flushPath = prefixRoot(root, flushPath)
 	}
 
 	// Get the filename
@@ -284,4 +299,8 @@ func isMultipleModes(bools ...bool) bool {
 	}
 
 	return false
+}
+
+func prefixRoot(root, path string) string {
+	return pathutil.Clean(fmt.Sprintf("/%s/%s", root, path))
 }
