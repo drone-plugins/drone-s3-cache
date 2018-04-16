@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"path"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
@@ -298,9 +299,5 @@ func isMultipleModes(bools ...bool) bool {
 }
 
 func prefixRoot(root, path string) string {
-	if len(root) > 0 {
-		return fmt.Sprintf("/%s/%s", root, path)
-	}
-
-	return fmt.Sprintf("/%s", path)
+	return pathutil.Clean(fmt.Sprintf("/%s/%s", root, path))
 }
