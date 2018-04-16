@@ -302,5 +302,5 @@ func isMultipleModes(bools ...bool) bool {
 }
 
 func prefixRoot(root, path string) string {
-	return pathutil.Clean(fmt.Sprintf("/%s/%s", root, path))
+	return path.Clean(fmt.Sprintf("/%s/%s", root, path))
 }
