@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/storage"
 	"github.com/dustin/go-humanize"
 	"github.com/minio/minio-go"
