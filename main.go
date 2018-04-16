@@ -8,20 +8,23 @@ import (
 	"strings"
 	"path"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
 	"github.com/drone/drone-cache-lib/storage"
 	"github.com/urfave/cli"
 )
 
-var build = "0" // build number set at compile-time
+var (
+	version = "0.0.0"
+	build   = "0"
+)
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "cache plugin"
 	app.Usage = "cache plugin"
+	app.Version = fmt.Sprintf("%s+%s", version, build)
 	app.Action = run
-	app.Version = fmt.Sprintf("1.2.0+%s", build)
 	app.Flags = []cli.Flag{
 		// Cache information
 
