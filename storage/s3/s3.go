@@ -50,6 +50,12 @@ func New(opts *Options) (storage.Storage, error) {
 		creds = credentials.NewStaticV4(opts.Access, opts.Secret, "")
 	} else {
 		creds = credentials.NewIAM("")
+
+		// See if the IAM role can be retrieved
+		_, err := creds.Get()
+		if err != nil {
+			return nil, err
+		}
 	}
 	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, "")
 
