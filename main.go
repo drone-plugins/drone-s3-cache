@@ -98,6 +98,12 @@ func main() {
 			EnvVar: "DRONE_REPO_NAME",
 		},
 		cli.StringFlag{
+			Name:   "repo.branch",
+			Value:  "master",
+			Usage:  "repository default branch",
+			EnvVar: "DRONE_REPO_BRANCH",
+		},
+		cli.StringFlag{
 			Name:   "commit.branch",
 			Value:  "master",
 			Usage:  "git commit branch",
@@ -191,9 +197,10 @@ func run(c *cli.Context) error {
 		log.Info("No fallback_path specified. Creating default")
 
 		fallbackPath = fmt.Sprintf(
-			"%s/%s/master",
+			"%s/%s/%s",
 			c.String("repo.owner"),
 			c.String("repo.name"),
+			c.String("repo.branch"),
 		)
 
 		fallbackPath = prefixRoot(root, fallbackPath)
