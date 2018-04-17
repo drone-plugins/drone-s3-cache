@@ -174,7 +174,7 @@ func run(c *cli.Context) error {
 		log.Info("No path specified. Creating default")
 
 		path = fmt.Sprintf(
-			"%s/%s/%s/",
+			"%s/%s/%s",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 			c.String("commit.branch"),
@@ -191,7 +191,7 @@ func run(c *cli.Context) error {
 		log.Info("No fallback_path specified. Creating default")
 
 		fallbackPath = fmt.Sprintf(
-			"%s/%s/master/",
+			"%s/%s/master",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 		)
@@ -207,7 +207,7 @@ func run(c *cli.Context) error {
 		log.Info("No flush_path specified. Creating default")
 
 		flushPath = fmt.Sprintf(
-			"%s/%s/",
+			"%s/%s",
 			c.String("repo.owner"),
 			c.String("repo.name"),
 		)
