@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	pathutil "path"
 	"strconv"
 	"strings"
-	pathutil "path"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
 	"github.com/drone/drone-cache-lib/storage"
+	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 

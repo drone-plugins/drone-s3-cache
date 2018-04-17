@@ -1,13 +1,13 @@
 package main
 
 import (
-	"time"
 	pathutil "path"
+	"time"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/archive/util"
 	"github.com/drone/drone-cache-lib/cache"
 	"github.com/drone/drone-cache-lib/storage"
+	log "github.com/sirupsen/logrus"
 )
 
 // Plugin structure
