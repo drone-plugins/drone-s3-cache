@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	pathutil "path"
 	"strconv"
 	"strings"
-	pathutil "path"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
 	"github.com/drone/drone-cache-lib/storage"
+	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
@@ -96,6 +96,12 @@ func main() {
 			Name:   "repo.name",
 			Usage:  "repository name",
 			EnvVar: "DRONE_REPO_NAME",
+		},
+		cli.StringFlag{
+			Name:   "repo.branch",
+			Value:  "master",
+			Usage:  "repository default branch",
+			EnvVar: "DRONE_REPO_BRANCH",
 		},
 		cli.StringFlag{
 			Name:   "commit.branch",
@@ -191,9 +197,10 @@ func run(c *cli.Context) error {
 		log.Info("No fallback_path specified. Creating default")
 
 		fallbackPath = fmt.Sprintf(
-			"%s/%s/master",
+			"%s/%s/%s",
 			c.String("repo.owner"),
 			c.String("repo.name"),
+			c.String("repo.branch"),
 		)
 
 		fallbackPath = prefixRoot(root, fallbackPath)

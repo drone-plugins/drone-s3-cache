@@ -5,11 +5,11 @@ import (
 	"io"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/storage"
 	"github.com/dustin/go-humanize"
 	"github.com/minio/minio-go"
 	"github.com/minio/minio-go/pkg/credentials"
+	log "github.com/sirupsen/logrus"
 )
 
 // Options contains configuration for the S3 connection.
@@ -46,7 +46,7 @@ type s3Storage struct {
 // New method creates an implementation of Storage with S3 as the backend.
 func New(opts *Options) (storage.Storage, error) {
 	var creds *credentials.Credentials
-	if (len(opts.Access) != 0 && len(opts.Secret) != 0){
+	if len(opts.Access) != 0 && len(opts.Secret) != 0 {
 		creds = credentials.NewStaticV4(opts.Access, opts.Secret, "")
 	} else {
 		creds = credentials.NewIAM("")
@@ -117,7 +117,7 @@ func (s *s3Storage) Put(p string, src io.Reader) error {
 	}
 
 	if !exists {
-		if err =s.client.MakeBucket(bucket, s.opts.Region); err != nil {
+		if err = s.client.MakeBucket(bucket, s.opts.Region); err != nil {
 			return err
 		}
 		log.Infof("Bucket %s created", bucket)
