@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+	pathutil "path"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/archive/util"
@@ -43,8 +44,8 @@ func (p *Plugin) Exec() error {
 
 	c := cache.New(p.Storage, at)
 
-	path := p.Path + p.Filename
-	fallbackPath := p.FallbackPath + p.Filename
+	path := pathutil.Join(p.Path, p.Filename)
+	fallbackPath := pathutil.Join(p.FallbackPath, p.Filename)
 
 	if p.Mode == RebuildMode {
 		log.Infof("Rebuilding cache at %s", path)
