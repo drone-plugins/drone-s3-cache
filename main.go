@@ -70,7 +70,7 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:   "flush_age",
-			Usage:  "flush cache files older then # days",
+			Usage:  "flush cache files older than # days",
 			EnvVar: "PLUGIN_FLUSH_AGE",
 			Value:  "30",
 		},

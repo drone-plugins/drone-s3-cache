@@ -66,7 +66,7 @@ func (p *Plugin) Exec() error {
 	}
 
 	if p.Mode == FlushMode {
-		log.Infof("Flushing cache items older then %d days at %s", p.FlushAge, path)
+		log.Infof("Flushing cache items older than %d days at %s", p.FlushAge, path)
 		f := cache.NewFlusher(p.Storage, genIsExpired(p.FlushAge))
 		err = f.Flush(p.FlushPath)
 
@@ -80,7 +80,7 @@ func (p *Plugin) Exec() error {
 
 func genIsExpired(age int) cache.DirtyFunc {
 	return func(file storage.FileEntry) bool {
-		// Check if older then "age" days
+		// Check if older than "age" days
 		return file.LastModified.Before(time.Now().AddDate(0, 0, age*-1))
 	}
 }
