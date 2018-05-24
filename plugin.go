@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
-	"os"
 	pathutil "path"
 	"time"
 
@@ -52,12 +50,6 @@ func (p *Plugin) Exec() error {
 	path := pathutil.Join(p.Path, p.Filename)
 	fallbackPath := pathutil.Join(p.FallbackPath, p.Filename)
 
-	fi, e := os.Stat("/etc/ssl/certs/ca-certificates.crt")
-	if e != nil {
-		return e
-	}
-	fmt.Printf("The file is %d bytes long before", fi.Size())
-
 	if p.Cacert != "" {
 		certPath := "/etc/ssl/certs/ca-certificates.crt"
 		log.Infof("Installing new ca certificate at %s", certPath)
@@ -76,12 +68,6 @@ func (p *Plugin) Exec() error {
 			log.Info("Successfully installed new certificate")
 		}
 	}
-
-	fi, e = os.Stat("/etc/ssl/certs/ca-certificates.crt")
-	if e != nil {
-		return e
-	}
-	fmt.Printf("The file is %d bytes long after", fi.Size())
 
 	if p.Mode == RebuildMode {
 		log.Infof("Rebuilding cache at %s", path)
