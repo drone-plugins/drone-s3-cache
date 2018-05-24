@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
+	"os"
 	pathutil "path"
 	"time"
 
@@ -19,6 +22,8 @@ type Plugin struct {
 	Mode         string
 	FlushAge     int
 	Mount        []string
+	Cacert       string
+	CacertPath   string
 
 	Storage storage.Storage
 }
@@ -46,6 +51,37 @@ func (p *Plugin) Exec() error {
 
 	path := pathutil.Join(p.Path, p.Filename)
 	fallbackPath := pathutil.Join(p.FallbackPath, p.Filename)
+
+	fi, e := os.Stat("/etc/ssl/certs/ca-certificates.crt")
+	if e != nil {
+		return e
+	}
+	fmt.Printf("The file is %d bytes long before", fi.Size())
+
+	if p.Cacert != "" {
+		certPath := "/etc/ssl/certs/ca-certificates.crt"
+		log.Infof("Installing new ca certificate at %s", certPath)
+		err := installCaCert(certPath, p.Cacert)
+
+		if err == nil {
+			log.Info("Successfully installed new certificate")
+		}
+	}
+
+	if p.CacertPath != "" {
+		certPath := "/etc/ssl/certs/ca-certificates.crt"
+		log.Infof("Installing new ca certificate at %s", certPath)
+		err := installCaCertFromPath(certPath, p.CacertPath)
+		if err == nil {
+			log.Info("Successfully installed new certificate")
+		}
+	}
+
+	fi, e = os.Stat("/etc/ssl/certs/ca-certificates.crt")
+	if e != nil {
+		return e
+	}
+	fmt.Printf("The file is %d bytes long after", fi.Size())
 
 	if p.Mode == RebuildMode {
 		log.Infof("Rebuilding cache at %s", path)
@@ -83,4 +119,19 @@ func genIsExpired(age int) cache.DirtyFunc {
 		// Check if older than "age" days
 		return file.LastModified.Before(time.Now().AddDate(0, 0, age*-1))
 	}
+}
+
+func installCaCert(path, cacert string) error {
+	err := ioutil.WriteFile(path, []byte(cacert), 0644)
+	return err
+}
+
+func installCaCertFromPath(path, cacertPath string) error {
+	cacert, err := ioutil.ReadFile(cacertPath)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(path, []byte(cacert), 0644)
+	return err
 }
