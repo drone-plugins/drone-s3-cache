@@ -127,6 +127,16 @@ func main() {
 			Usage:  "s3 secret key",
 			EnvVar: "PLUGIN_SECRET_KEY,CACHE_S3_SECRET_KEY,AWS_SECRET_ACCESS_KEY",
 		},
+		cli.StringFlag{
+			Name:   "ca_cert",
+			Usage:  "ca cert to connect to s3 server",
+			EnvVar: "PLUGIN_CA_CERT,CACHE_S3_CA_CERT",
+		},
+		cli.StringFlag{
+			Name:   "ca_cert_path",
+			Usage:  "ca cert to connect to s3 server",
+			EnvVar: "PLUGIN_CA_CERT_PATH,CACHE_S3_CA_CERT_PATH",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -252,6 +262,8 @@ func run(c *cli.Context) error {
 		FlushAge:     flushAge,
 		Mount:        mount,
 		Storage:      s,
+		Cacert:       c.String("ca_cert"),
+		CacertPath:   c.String("ca_cert_path"),
 	}
 
 	return p.Exec()
