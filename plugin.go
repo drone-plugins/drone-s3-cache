@@ -64,6 +64,7 @@ func (p *Plugin) Exec() error {
 		certPath := "/etc/ssl/certs/ca-certificates.crt"
 		log.Infof("Installing new ca certificate at %s", certPath)
 		err := installCaCertFromPath(certPath, p.CacertPath)
+
 		if err == nil {
 			log.Info("Successfully installed new certificate")
 		}

@@ -130,12 +130,12 @@ func main() {
 		cli.StringFlag{
 			Name:   "ca_cert",
 			Usage:  "ca cert to connect to s3 server",
-			EnvVar: "PLUGIN_CA_CERT,CACHE_S3_CA_CERT,AWS_CA_CERT",
+			EnvVar: "PLUGIN_CA_CERT,CACHE_S3_CA_CERT",
 		},
 		cli.StringFlag{
 			Name:   "ca_cert_path",
 			Usage:  "ca cert to connect to s3 server",
-			EnvVar: "PLUGIN_CA_CERT_PATH,CACHE_S3_CA_CERT_PATH,AWS_CA_CERT_PATH",
+			EnvVar: "PLUGIN_CA_CERT_PATH,CACHE_S3_CA_CERT_PATH",
 		},
 	}
 
