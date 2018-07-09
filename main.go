@@ -120,7 +120,7 @@ func main() {
 		cli.StringFlag{
 			Name:   "accelerated-endpoint",
 			Usage:  "s3 accelerated endpoint",
-			EnvVar: "PLUGIN_ACCELERATED_ENDPOINT,CACHE_S3_ACCELERATED_ENDPOINT,CACHE_S3_ACCELERATED_SERVER,S3_ACCELERATED_ENDPOINT",
+			EnvVar: "PLUGIN_ACCELERATED_ENDPOINT,CACHE_S3_ACCELERATED_ENDPOINT",
 		},
 		cli.StringFlag{
 			Name:   "access-key",
