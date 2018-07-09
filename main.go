@@ -118,6 +118,11 @@ func main() {
 			EnvVar: "PLUGIN_SERVER,PLUGIN_ENDPOINT,CACHE_S3_ENDPOINT,CACHE_S3_SERVER,S3_ENDPOINT",
 		},
 		cli.StringFlag{
+			Name:   "accelerated-endpoint",
+			Usage:  "s3 accelerated endpoint",
+			EnvVar: "PLUGIN_ACCELERATED_ENDPOINT,CACHE_S3_ACCELERATED_ENDPOINT",
+		},
+		cli.StringFlag{
 			Name:   "access-key",
 			Usage:  "s3 access key",
 			EnvVar: "PLUGIN_ACCESS_KEY,CACHE_S3_ACCESS_KEY,AWS_ACCESS_KEY_ID",
@@ -293,15 +298,18 @@ func s3Storage(c *cli.Context) (storage.Storage, error) {
 		useSSL = true
 	}
 
+	acceleratedEndpoint := c.String("accelerated-endpoint")
+
 	// Get the access credentials
 	access := c.String("access-key")
 	secret := c.String("secret-key")
 
 	return s3.New(&s3.Options{
-		Endpoint: endpoint,
-		Access:   access,
-		Secret:   secret,
-		UseSSL:   useSSL,
+		Endpoint:            endpoint,
+		AcceleratedEndpoint: acceleratedEndpoint,
+		Access:              access,
+		Secret:              secret,
+		UseSSL:              useSSL,
 	})
 }
 
