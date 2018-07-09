@@ -15,6 +15,7 @@ import (
 // Options contains configuration for the S3 connection.
 type Options struct {
 	Endpoint   string
+	AcceleratedEndpoint string
 	Key        string
 	Secret     string
 	Encryption string
@@ -61,6 +62,10 @@ func New(opts *Options) (storage.Storage, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	if opts.AcceleratedEndpoint != "" {
+		client.SetS3TransferAccelerate(opts.AcceleratedEndpoint)
 	}
 
 	return &s3Storage{
