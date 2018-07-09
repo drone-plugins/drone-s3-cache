@@ -14,12 +14,12 @@ import (
 
 // Options contains configuration for the S3 connection.
 type Options struct {
-	Endpoint   string
+	Endpoint            string
 	AcceleratedEndpoint string
-	Key        string
-	Secret     string
-	Encryption string
-	Access     string
+	Key                 string
+	Secret              string
+	Encryption          string
+	Access              string
 
 	// us-east-1
 	// us-west-1

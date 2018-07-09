@@ -305,11 +305,11 @@ func s3Storage(c *cli.Context) (storage.Storage, error) {
 	secret := c.String("secret-key")
 
 	return s3.New(&s3.Options{
-		Endpoint: endpoint,
+		Endpoint:            endpoint,
 		AcceleratedEndpoint: acceleratedEndpoint,
-		Access:   access,
-		Secret:   secret,
-		UseSSL:   useSSL,
+		Access:              access,
+		Secret:              secret,
+		UseSSL:              useSSL,
 	})
 }
 
