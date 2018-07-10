@@ -133,6 +133,12 @@ func main() {
 			EnvVar: "PLUGIN_SECRET_KEY,CACHE_S3_SECRET_KEY,AWS_SECRET_ACCESS_KEY",
 		},
 		cli.StringFlag{
+			Name:   "region",
+			Usage:  "s3 region",
+			Value:  "us-east-1",
+			EnvVar: "PLUGIN_REGION,CACHE_S3_REGION",
+		},
+		cli.StringFlag{
 			Name:   "ca_cert",
 			Usage:  "ca cert to connect to s3 server",
 			EnvVar: "PLUGIN_CA_CERT,CACHE_S3_CA_CERT",
@@ -298,17 +304,12 @@ func s3Storage(c *cli.Context) (storage.Storage, error) {
 		useSSL = true
 	}
 
-	acceleratedEndpoint := c.String("accelerated-endpoint")
-
-	// Get the access credentials
-	access := c.String("access-key")
-	secret := c.String("secret-key")
-
 	return s3.New(&s3.Options{
 		Endpoint:            endpoint,
-		AcceleratedEndpoint: acceleratedEndpoint,
-		Access:              access,
-		Secret:              secret,
+		AcceleratedEndpoint: c.String("accelerated-endpoint"),
+		Access:              c.String("access-key"),
+		Secret:              c.String("secret-key"),
+		Region:              c.String("region"),
 		UseSSL:              useSSL,
 	})
 }

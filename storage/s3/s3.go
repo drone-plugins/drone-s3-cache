@@ -18,7 +18,6 @@ type Options struct {
 	AcceleratedEndpoint string
 	Key                 string
 	Secret              string
-	Encryption          string
 	Access              string
 
 	// us-east-1
@@ -30,11 +29,6 @@ type Options struct {
 	// ap-northeast-1
 	// sa-east-1
 	Region string
-
-	// Use path style instead of domain style.
-	//
-	// Should be true for minio and false for AWS.
-	PathStyle bool
 
 	UseSSL bool
 }
@@ -48,7 +42,7 @@ type s3Storage struct {
 func New(opts *Options) (storage.Storage, error) {
 	var creds *credentials.Credentials
 	if len(opts.Access) != 0 && len(opts.Secret) != 0 {
-		creds = credentials.NewStaticV4(opts.Access, opts.Secret, "")
+		creds = credentials.NewStaticV4(opts.Access, opts.Secret, opts.Region)
 	} else {
 		creds = credentials.NewIAM("")
 
