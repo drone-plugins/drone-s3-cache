@@ -135,7 +135,6 @@ func main() {
 		cli.StringFlag{
 			Name:   "region",
 			Usage:  "s3 region",
-			Value:  "us-east-1",
 			EnvVar: "PLUGIN_REGION,CACHE_S3_REGION",
 		},
 		cli.StringFlag{
