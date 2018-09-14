@@ -175,7 +175,7 @@ func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 			Size:         object.Size,
 			LastModified: object.LastModified,
 		})
-		log.Debugf("Found object %s: Path=%s Size=%s LastModified=%s", object.Key, path, object.Size, object.LastModified)
+		log.Debugf("Found object %s: Path=%s Size=%d LastModified=%s", object.Key, path, object.Size, object.LastModified)
 	}
 
 	log.Infof("Found %d objects in bucket %s at %s", len(objects), bucket, key)
