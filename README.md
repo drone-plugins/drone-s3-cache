@@ -12,26 +12,31 @@ Drone plugin that allows you to cache directories within the build workspace, th
 
 ## Build
 
-Build the binary with the following commands:
+Build the binary with the following command:
 
-```
-go build
+```console
+export GOOS=linux
+export GOARCH=amd64
+export CGO_ENABLED=0
+export GO111MODULE=on
+
+go build -v -a -tags netgo -o release/linux/amd64/drone-s3-cache
 ```
 
 ## Docker
 
-Build the Docker image with the following commands:
+Build the Docker image with the following command:
 
-```
-GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -a -tags netgo -o release/linux/amd64/drone-s3-cache
-docker build --rm -t plugins/s3-cache .
+```console
+docker build \
+  --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+  --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
+  --file docker/Dockerfile.linux.amd64 --tag plugins/s3-cache .
 ```
 
 ## Usage
 
-Execute from the working directory:
-
-```
+```console
 docker run --rm \
   -e PLUGIN_FLUSH=true \
   -e PLUGIN_URL="http://minio.company.com" \
