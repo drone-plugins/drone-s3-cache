@@ -29,7 +29,7 @@ func main() {
 
 		cli.StringFlag{
 			Name:   "filename",
-			Usage:  "Filename for the cache",
+			Usage:  "filename for the cache",
 			EnvVar: "PLUGIN_FILENAME",
 		},
 		cli.StringFlag{
