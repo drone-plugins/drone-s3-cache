@@ -53,7 +53,6 @@ func (p *Plugin) Exec() error {
 	fallbackPath := pathutil.Join(p.FallbackPath, p.Filename)
 
 	if p.Workdir != "" {
-		log.Infof("Changing workdir to %s", p.Workdir)
 		err = os.Chdir(p.Workdir)
 		if err == nil {
 			log.Infof("Sucessfully changed workdir to %s", p.Workdir)
