@@ -78,6 +78,11 @@ func main() {
 			Usage:  "path to search for flushable cache files",
 			EnvVar: "PLUGIN_FLUSH_PATH",
 		},
+		cli.StringFlag{
+			Name:   "workdir",
+			Usage:  "path where the cache will be extracted to",
+			EnvVar: "PLUGIN_WORKDIR",
+		},
 		cli.BoolFlag{
 			Name:   "debug",
 			Usage:  "debug plugin output",
@@ -188,6 +193,9 @@ func run(c *cli.Context) error {
 		mode = RestoreMode
 	}
 
+	// Get the working directory
+	workdir := c.String("workdir")
+
 	// Get the root path prefix to place the cache files
 	root := c.GlobalString("root")
 
@@ -273,6 +281,7 @@ func run(c *cli.Context) error {
 		Storage:      s,
 		Cacert:       c.String("ca_cert"),
 		CacertPath:   c.String("ca_cert_path"),
+		Workdir:      workdir,
 	}
 
 	return p.Exec()

@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	pathutil "path"
 	"time"
+	"os"
 
 	"github.com/drone/drone-cache-lib/archive/util"
 	"github.com/drone/drone-cache-lib/cache"
@@ -22,6 +23,7 @@ type Plugin struct {
 	Mount        []string
 	Cacert       string
 	CacertPath   string
+	Workdir      string
 
 	Storage storage.Storage
 }
@@ -49,6 +51,17 @@ func (p *Plugin) Exec() error {
 
 	path := pathutil.Join(p.Path, p.Filename)
 	fallbackPath := pathutil.Join(p.FallbackPath, p.Filename)
+
+	if p.Workdir != "" {
+		log.Infof("Changing workdir to %s", p.Workdir)
+		err = os.Chdir(p.Workdir)
+		if err == nil {
+			log.Infof("Sucessfully changed workdir to %s", p.Workdir)
+		} else {
+			log.Errorf("Unable to change workdir to %s", p.Workdir)
+			return err
+		}
+	}
 
 	if p.Cacert != "" {
 		certPath := "/etc/ssl/certs/ca-certificates.crt"
