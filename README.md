@@ -39,7 +39,7 @@ docker build \
 ```console
 docker run --rm \
   -e PLUGIN_FLUSH=true \
-  -e PLUGIN_URL="http://minio.company.com" \
+  -e PLUGIN_ENDPOINT="http://minio.company.com" \
   -e PLUGIN_ACCESS_KEY="myaccesskey" \
   -e PLUGIN_SECRET_KEY="mysecretKey" \
   -v $(pwd):$(pwd) \
@@ -48,7 +48,7 @@ docker run --rm \
 
 docker run --rm \
   -e PLUGIN_RESTORE=true \
-  -e PLUGIN_URL="http://minio.company.com" \
+  -e PLUGIN_ENDPOINT="http://minio.company.com" \
   -e PLUGIN_ACCESS_KEY="myaccesskey" \
   -e PLUGIN_SECRET_KEY="mysecretKey" \
   -e DRONE_REPO_OWNER="foo" \
@@ -66,7 +66,7 @@ docker run -it --rm \
 docker run --rm \
   -e PLUGIN_REBUILD=true \
   -e PLUGIN_MOUNT=".bundler" \
-  -e PLUGIN_URL="http://minio.company.com" \
+  -e PLUGIN_ENDPOINT="http://minio.company.com" \
   -e PLUGIN_ACCESS_KEY="myaccesskey" \
   -e PLUGIN_SECRET_KEY="mysecretKey" \
   -e DRONE_REPO_OWNER="foo" \
