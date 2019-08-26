@@ -19,6 +19,7 @@ type Options struct {
 	Key                 string
 	Secret              string
 	Access              string
+	Token               string
 
 	// us-east-1
 	// us-west-1
@@ -42,7 +43,7 @@ type s3Storage struct {
 func New(opts *Options) (storage.Storage, error) {
 	var creds *credentials.Credentials
 	if len(opts.Access) != 0 && len(opts.Secret) != 0 {
-		creds = credentials.NewStaticV4(opts.Access, opts.Secret, opts.Region)
+		creds = credentials.NewStaticV4(opts.Access, opts.Secret, opts.Token)
 	} else {
 		creds = credentials.NewIAM("")
 
