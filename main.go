@@ -132,6 +132,11 @@ func main() {
 			EnvVar: "PLUGIN_SECRET_KEY,CACHE_S3_SECRET_KEY,AWS_SECRET_ACCESS_KEY",
 		},
 		cli.StringFlag{
+			Name:   "session-token",
+			Usage:  "s3 session token",
+			EnvVar: "PLUGIN_SESSION_TOKEN,CACHE_S3_SESSION_TOKEN,AWS_SESSION_TOKEN",
+		},
+		cli.StringFlag{
 			Name:   "region",
 			Usage:  "s3 region",
 			EnvVar: "PLUGIN_REGION,CACHE_S3_REGION",
@@ -307,6 +312,7 @@ func s3Storage(c *cli.Context) (storage.Storage, error) {
 		AcceleratedEndpoint: c.String("accelerated-endpoint"),
 		Access:              c.String("access-key"),
 		Secret:              c.String("secret-key"),
+		Token:               c.String("session-token"),
 		Region:              c.String("region"),
 		UseSSL:              useSSL,
 	})
