@@ -11,7 +11,7 @@ import (
 	"github.com/drone-plugins/drone-s3-cache/storage/s3"
 	"github.com/drone/drone-cache-lib/storage"
 	log "github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 var (
@@ -27,129 +27,129 @@ func main() {
 	app.Flags = []cli.Flag{
 		// Cache information
 
-		cli.StringFlag{
-			Name:   "filename",
-			Usage:  "Filename for the cache",
-			EnvVar: "PLUGIN_FILENAME",
+		&cli.StringFlag{
+			Name:    "filename",
+			Usage:   "Filename for the cache",
+			EnvVars: []string{"PLUGIN_FILENAME"},
 		},
-		cli.StringFlag{
-			Name:   "root",
-			Usage:  "root",
-			EnvVar: "PLUGIN_ROOT",
+		&cli.StringFlag{
+			Name:    "root",
+			Usage:   "root",
+			EnvVars: []string{"PLUGIN_ROOT"},
 		},
-		cli.StringFlag{
-			Name:   "path",
-			Usage:  "path",
-			EnvVar: "PLUGIN_PATH",
+		&cli.StringFlag{
+			Name:    "path",
+			Usage:   "path",
+			EnvVars: []string{"PLUGIN_PATH"},
 		},
-		cli.StringFlag{
-			Name:   "fallback_path",
-			Usage:  "fallback_path",
-			EnvVar: "PLUGIN_FALLBACK_PATH",
+		&cli.StringFlag{
+			Name:    "fallback_path",
+			Usage:   "fallback_path",
+			EnvVars: []string{"PLUGIN_FALLBACK_PATH"},
 		},
-		cli.StringSliceFlag{
-			Name:   "mount",
-			Usage:  "cache directories",
-			EnvVar: "PLUGIN_MOUNT",
+		&cli.StringSliceFlag{
+			Name:    "mount",
+			Usage:   "cache directories",
+			EnvVars: []string{"PLUGIN_MOUNT"},
 		},
-		cli.BoolFlag{
-			Name:   "rebuild",
-			Usage:  "rebuild the cache directories",
-			EnvVar: "PLUGIN_REBUILD",
+		&cli.BoolFlag{
+			Name:    "rebuild",
+			Usage:   "rebuild the cache directories",
+			EnvVars: []string{"PLUGIN_REBUILD"},
 		},
-		cli.BoolFlag{
-			Name:   "restore",
-			Usage:  "restore the cache directories",
-			EnvVar: "PLUGIN_RESTORE",
+		&cli.BoolFlag{
+			Name:    "restore",
+			Usage:   "restore the cache directories",
+			EnvVars: []string{"PLUGIN_RESTORE"},
 		},
-		cli.BoolFlag{
-			Name:   "flush",
-			Usage:  "flush the cache",
-			EnvVar: "PLUGIN_FLUSH",
+		&cli.BoolFlag{
+			Name:    "flush",
+			Usage:   "flush the cache",
+			EnvVars: []string{"PLUGIN_FLUSH"},
 		},
-		cli.StringFlag{
-			Name:   "flush_age",
-			Usage:  "flush cache files older than # days",
-			EnvVar: "PLUGIN_FLUSH_AGE",
-			Value:  "30",
+		&cli.StringFlag{
+			Name:    "flush_age",
+			Usage:   "flush cache files older than # days",
+			EnvVars: []string{"PLUGIN_FLUSH_AGE"},
+			Value:   "30",
 		},
-		cli.StringFlag{
-			Name:   "flush_path",
-			Usage:  "path to search for flushable cache files",
-			EnvVar: "PLUGIN_FLUSH_PATH",
+		&cli.StringFlag{
+			Name:    "flush_path",
+			Usage:   "path to search for flushable cache files",
+			EnvVars: []string{"PLUGIN_FLUSH_PATH"},
 		},
-		cli.BoolFlag{
-			Name:   "debug",
-			Usage:  "debug plugin output",
-			EnvVar: "PLUGIN_DEBUG",
+		&cli.BoolFlag{
+			Name:    "debug",
+			Usage:   "debug plugin output",
+			EnvVars: []string{"PLUGIN_DEBUG"},
 		},
 
 		// Build information (for setting defaults)
 
-		cli.StringFlag{
-			Name:   "repo.owner",
-			Usage:  "repository owner",
-			EnvVar: "DRONE_REPO_OWNER",
+		&cli.StringFlag{
+			Name:    "repo.owner",
+			Usage:   "repository owner",
+			EnvVars: []string{"DRONE_REPO_OWNER"},
 		},
-		cli.StringFlag{
-			Name:   "repo.name",
-			Usage:  "repository name",
-			EnvVar: "DRONE_REPO_NAME",
+		&cli.StringFlag{
+			Name:    "repo.name",
+			Usage:   "repository name",
+			EnvVars: []string{"DRONE_REPO_NAME"},
 		},
-		cli.StringFlag{
-			Name:   "repo.branch",
-			Value:  "master",
-			Usage:  "repository default branch",
-			EnvVar: "DRONE_REPO_BRANCH",
+		&cli.StringFlag{
+			Name:    "repo.branch",
+			Value:   "master",
+			Usage:   "repository default branch",
+			EnvVars: []string{"DRONE_REPO_BRANCH"},
 		},
-		cli.StringFlag{
-			Name:   "commit.branch",
-			Value:  "master",
-			Usage:  "git commit branch",
-			EnvVar: "DRONE_COMMIT_BRANCH",
+		&cli.StringFlag{
+			Name:    "commit.branch",
+			Value:   "master",
+			Usage:   "git commit branch",
+			EnvVars: []string{"DRONE_COMMIT_BRANCH"},
 		},
 
 		// S3 information
 
-		cli.StringFlag{
-			Name:   "server",
-			Usage:  "s3 server",
-			EnvVar: "PLUGIN_SERVER,PLUGIN_ENDPOINT,CACHE_S3_ENDPOINT,CACHE_S3_SERVER,S3_ENDPOINT",
+		&cli.StringFlag{
+			Name:    "server",
+			Usage:   "s3 server",
+			EnvVars: []string{"PLUGIN_SERVER", "PLUGIN_ENDPOINT", "CACHE_S3_ENDPOINT", "CACHE_S3_SERVER", "S3_ENDPOINT"},
 		},
-		cli.StringFlag{
-			Name:   "accelerated-endpoint",
-			Usage:  "s3 accelerated endpoint",
-			EnvVar: "PLUGIN_ACCELERATED_ENDPOINT,CACHE_S3_ACCELERATED_ENDPOINT",
+		&cli.StringFlag{
+			Name:    "accelerated-endpoint",
+			Usage:   "s3 accelerated endpoint",
+			EnvVars: []string{"PLUGIN_ACCELERATED_ENDPOINT", "CACHE_S3_ACCELERATED_ENDPOINT"},
 		},
-		cli.StringFlag{
-			Name:   "access-key",
-			Usage:  "s3 access key",
-			EnvVar: "PLUGIN_ACCESS_KEY,CACHE_S3_ACCESS_KEY,AWS_ACCESS_KEY_ID",
+		&cli.StringFlag{
+			Name:    "access-key",
+			Usage:   "s3 access key",
+			EnvVars: []string{"PLUGIN_ACCESS_KEY", "CACHE_S3_ACCESS_KEY", "AWS_ACCESS_KEY_ID"},
 		},
-		cli.StringFlag{
-			Name:   "secret-key",
-			Usage:  "s3 secret key",
-			EnvVar: "PLUGIN_SECRET_KEY,CACHE_S3_SECRET_KEY,AWS_SECRET_ACCESS_KEY",
+		&cli.StringFlag{
+			Name:    "secret-key",
+			Usage:   "s3 secret key",
+			EnvVars: []string{"PLUGIN_SECRET_KEY", "CACHE_S3_SECRET_KEY", "AWS_SECRET_ACCESS_KEY"},
 		},
-		cli.StringFlag{
-			Name:   "session-token",
-			Usage:  "s3 session token",
-			EnvVar: "PLUGIN_SESSION_TOKEN,CACHE_S3_SESSION_TOKEN,AWS_SESSION_TOKEN",
+		&cli.StringFlag{
+			Name:    "session-token",
+			Usage:   "s3 session token",
+			EnvVars: []string{"PLUGIN_SESSION_TOKEN", "CACHE_S3_SESSION_TOKEN", "AWS_SESSION_TOKEN"},
 		},
-		cli.StringFlag{
-			Name:   "region",
-			Usage:  "s3 region",
-			EnvVar: "PLUGIN_REGION,CACHE_S3_REGION",
+		&cli.StringFlag{
+			Name:    "region",
+			Usage:   "s3 region",
+			EnvVars: []string{"PLUGIN_REGION", "CACHE_S3_REGION"},
 		},
-		cli.StringFlag{
-			Name:   "ca_cert",
-			Usage:  "ca cert to connect to s3 server",
-			EnvVar: "PLUGIN_CA_CERT,CACHE_S3_CA_CERT",
+		&cli.StringFlag{
+			Name:    "ca_cert",
+			Usage:   "ca cert to connect to s3 server",
+			EnvVars: []string{"PLUGIN_CA_CERT", "CACHE_S3_CA_CERT"},
 		},
-		cli.StringFlag{
-			Name:   "ca_cert_path",
-			Usage:  "ca cert to connect to s3 server",
-			EnvVar: "PLUGIN_CA_CERT_PATH,CACHE_S3_CA_CERT_PATH",
+		&cli.StringFlag{
+			Name:    "ca_cert_path",
+			Usage:   "ca cert to connect to s3 server",
+			EnvVars: []string{"PLUGIN_CA_CERT_PATH", "CACHE_S3_CA_CERT_PATH"},
 		},
 	}
 
@@ -194,10 +194,10 @@ func run(c *cli.Context) error {
 	}
 
 	// Get the root path prefix to place the cache files
-	root := c.GlobalString("root")
+	root := c.String("root")
 
 	// Get the path to place the cache files
-	path := c.GlobalString("path")
+	path := c.String("path")
 
 	// Defaults to <owner>/<repo>/<branch>/
 	if len(path) == 0 {
@@ -214,7 +214,7 @@ func run(c *cli.Context) error {
 	}
 
 	// Get the fallback path to retrieve the cache files
-	fallbackPath := c.GlobalString("fallback_path")
+	fallbackPath := c.String("fallback_path")
 
 	// Defaults to <owner>/<repo>/master/
 	if len(fallbackPath) == 0 {
@@ -231,7 +231,7 @@ func run(c *cli.Context) error {
 	}
 
 	// Get the flush path to flush the cache files from
-	flushPath := c.GlobalString("flush_path")
+	flushPath := c.String("flush_path")
 
 	// Defaults to <owner>/<repo>/
 	if len(flushPath) == 0 {
@@ -247,7 +247,7 @@ func run(c *cli.Context) error {
 	}
 
 	// Get the filename
-	filename := c.GlobalString("filename")
+	filename := c.String("filename")
 
 	if len(filename) == 0 {
 		log.Info("No filename specified. Creating default")

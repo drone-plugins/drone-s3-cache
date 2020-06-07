@@ -7,8 +7,8 @@ import (
 
 	"github.com/drone/drone-cache-lib/storage"
 	"github.com/dustin/go-humanize"
-	"github.com/minio/minio-go"
-	"github.com/minio/minio-go/pkg/credentials"
+	"github.com/minio/minio-go/v6"
+	"github.com/minio/minio-go/v6/pkg/credentials"
 	log "github.com/sirupsen/logrus"
 )
 
