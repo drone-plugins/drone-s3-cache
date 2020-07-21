@@ -58,13 +58,13 @@ func (p *Plugin) Validate() error {
 func (p *Plugin) validateMode() error {
 	// Validate the mode
 	mode := p.settings.Mode
-	hasMode := p.settings.Rebuild || p.settings.Restore || p.settings.Rebuild
+	hasMode := p.settings.Rebuild || p.settings.Restore || p.settings.Flush
 	if mode == "" {
 		logrus.WithFields(logrus.Fields{
 			"rebuild": p.settings.Rebuild,
 			"restore": p.settings.Restore,
 			"flush":   p.settings.Flush,
-		}).Info("Mode specified using boolean config")
+		}).Info("mode specified using boolean config")
 
 		if !hasMode {
 			return fmt.Errorf("no mode specified")
