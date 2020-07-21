@@ -40,13 +40,13 @@ func settingsFlags(settings *plugin.Settings) []cli.Flag {
 			Destination: &settings.Path,
 		},
 		&cli.StringFlag{
-			Name:        "fallback_path",
+			Name:        "fallback-path",
 			Usage:       "path to default cache files relative to the root",
 			EnvVars:     []string{"PLUGIN_FALLBACK_PATH"},
 			Destination: &settings.FallbackPath,
 		},
 		&cli.StringFlag{
-			Name:        "flush_path",
+			Name:        "flush-path",
 			Usage:       "path to flushable cache files relative to the root",
 			EnvVars:     []string{"PLUGIN_FLUSH_PATH"},
 			Destination: &settings.FlushPath,
@@ -58,7 +58,7 @@ func settingsFlags(settings *plugin.Settings) []cli.Flag {
 			Destination: &settings.Mount,
 		},
 		&cli.IntFlag{
-			Name:        "flush_age",
+			Name:        "flush-age",
 			Usage:       "flush cache files older than # days",
 			EnvVars:     []string{"PLUGIN_FLUSH_AGE"},
 			Value:       30,
