@@ -9,7 +9,7 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/minio/minio-go/v6"
 	"github.com/minio/minio-go/v6/pkg/credentials"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 // Options contains configuration for the S3 connection.
@@ -50,13 +50,13 @@ func New(opts *Options) (storage.Storage, error) {
 		// See if the IAM role can be retrieved
 		_, err := creds.Get()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("could not connect to %s using IAM role: %w", opts.Endpoint, err)
 		}
 	}
 	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, "")
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not connect to %s: %w", opts.Endpoint, err)
 	}
 
 	if opts.AcceleratedEndpoint != "" {
@@ -73,87 +73,97 @@ func (s *s3Storage) Get(p string, dst io.Writer) error {
 	bucket, key := splitBucket(p)
 
 	if len(bucket) == 0 || len(key) == 0 {
-		return fmt.Errorf("Invalid path %s", p)
+		return fmt.Errorf("invalid path %s", p)
 	}
 
-	log.Infof("Retrieving file in %s at %s", bucket, key)
+	logrus.WithFields(logrus.Fields{
+		"bucket": bucket,
+		"key":    key,
+	}).Info("downloading file")
 
 	exists, err := s.client.BucketExists(bucket)
-
-	if !exists {
-		return err
+	if err != nil {
+		return fmt.Errorf("error when accessing bucket %s: %w", bucket, err)
+	} else if !exists {
+		return fmt.Errorf("bucket %s does not exist", bucket)
 	}
 
 	object, err := s.client.GetObject(bucket, key, minio.GetObjectOptions{})
 	if err != nil {
-		return err
+		return fmt.Errorf("could not retrieve %s from %s: %w", bucket, key, err)
 	}
 
-	log.Infof("Copying object from the server")
-
 	numBytes, err := io.Copy(dst, object)
-
 	if err != nil {
 		return err
 	}
 
-	log.Infof("Downloaded %s from server", humanize.Bytes(uint64(numBytes)))
-
+	logrus.WithFields(logrus.Fields{
+		"bucket": bucket,
+		"key":    key,
+		"size":   humanize.Bytes(uint64(numBytes)),
+	}).Info("file downloaded", bucket, key)
 	return nil
 }
 
 func (s *s3Storage) Put(p string, src io.Reader) error {
 	bucket, key := splitBucket(p)
 
-	log.Infof("Uploading to bucket %s at %s", bucket, key)
-
 	if len(bucket) == 0 || len(key) == 0 {
-		return fmt.Errorf("Invalid path %s", p)
+		return fmt.Errorf("invalid path %s", p)
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"bucket": bucket,
+		"key":    key,
+	}).Info("uploading file")
 
 	exists, err := s.client.BucketExists(bucket)
 	if err != nil {
-		return err
+		return fmt.Errorf("error when accessing bucket %s: %w", bucket, err)
+	} else if !exists {
+		return fmt.Errorf("bucket %s does not exist", bucket)
 	}
 
 	if !exists {
 		if err = s.client.MakeBucket(bucket, s.opts.Region); err != nil {
-			return err
+			return fmt.Errorf("could not create bucket %s: %w", bucket, err)
 		}
-		log.Infof("Bucket %s created", bucket)
+		logrus.WithField("name", bucket).Info("bucket created")
 	} else {
-		log.Infof("Bucket %s already exists", bucket)
+		logrus.WithField("name", bucket).Info("bucket found")
 	}
-
-	log.Infof("Putting file in %s at %s", bucket, key)
 
 	numBytes, err := s.client.PutObject(bucket, key, src, -1, minio.PutObjectOptions{ContentType: "application/tar"})
-
 	if err != nil {
-		return err
+		return fmt.Errorf("could not put file in bucket %s at %s: %w", bucket, key, err)
 	}
 
-	log.Infof("Uploaded %s to server", humanize.Bytes(uint64(numBytes)))
-
+	logrus.WithFields(logrus.Fields{
+		"bucket": bucket,
+		"key":    key,
+		"size":   humanize.Bytes(uint64(numBytes)),
+	}).Info("file uploaded")
 	return nil
 }
 
 func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 	bucket, key := splitBucket(p)
 
-	log.Infof("Retrieving objects in bucket %s at %s", bucket, key)
-
 	if len(bucket) == 0 || len(key) == 0 {
-		return nil, fmt.Errorf("Invalid path %s", p)
+		return nil, fmt.Errorf("invalid path %s", p)
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"bucket": bucket,
+		"key":    key,
+	}).Info("finding objects")
 
 	exists, err := s.client.BucketExists(bucket)
-
 	if err != nil {
-		return nil, fmt.Errorf("%s does not exist: %s", p, err)
-	}
-	if !exists {
-		return nil, fmt.Errorf("%s does not exist", p)
+		return nil, fmt.Errorf("error when accessing bucket %s: %w", bucket, err)
+	} else if !exists {
+		return nil, fmt.Errorf("bucket %s does not exist", bucket)
 	}
 
 	// Create a done channel to control 'ListObjectsV2' go routine.
@@ -167,7 +177,7 @@ func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 	objectCh := s.client.ListObjectsV2(bucket, key, isRecursive, doneCh)
 	for object := range objectCh {
 		if object.Err != nil {
-			return nil, fmt.Errorf("Failed to retrieve object %s: %s", object.Key, object.Err)
+			return nil, fmt.Errorf("could not get file in bucket %s at %s: %w", bucket, object.Key, object.Err)
 		}
 
 		path := bucket + "/" + object.Key
@@ -176,33 +186,45 @@ func (s *s3Storage) List(p string) ([]storage.FileEntry, error) {
 			Size:         object.Size,
 			LastModified: object.LastModified,
 		})
-		log.Debugf("Found object %s: Path=%s Size=%d LastModified=%s", object.Key, path, object.Size, object.LastModified)
+		logrus.WithFields(logrus.Fields{
+			"bucket":        bucket,
+			"key":           object.Key,
+			"size":          humanize.Bytes(uint64(object.Size)),
+			"last-modified": object.LastModified,
+		}).Debug("found object")
 	}
 
-	log.Infof("Found %d objects in bucket %s at %s", len(objects), bucket, key)
-
+	logrus.WithFields(logrus.Fields{
+		"bucket": bucket,
+		"key":    key,
+		"count":  len(objects),
+	}).Info("found objects")
 	return objects, nil
 }
 
 func (s *s3Storage) Delete(p string) error {
 	bucket, key := splitBucket(p)
 
-	log.Infof("Deleting object in bucket %s at %s", bucket, key)
-
 	if len(bucket) == 0 || len(key) == 0 {
-		return fmt.Errorf("Invalid path %s", p)
+		return fmt.Errorf("invalid path %s", p)
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"bucket": bucket,
+		"key":    key,
+	}).Info("deleting object")
 
 	exists, err := s.client.BucketExists(bucket)
-
 	if err != nil {
-		return fmt.Errorf("%s does not exist: %s", p, err)
-	}
-	if !exists {
-		return fmt.Errorf("%s does not exist", p)
+		return fmt.Errorf("error when accessing bucket %s: %w", bucket, err)
+	} else if !exists {
+		return fmt.Errorf("bucket %s does not exist", bucket)
 	}
 
 	err = s.client.RemoveObject(bucket, key)
+	if err != nil {
+		return fmt.Errorf("could not delete ")
+	}
 	return err
 }
 
