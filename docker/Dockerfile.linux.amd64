@@ -6,4 +6,4 @@ LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" \
   org.label-schema.schema-version="1.0"
 
 ADD release/linux/amd64/drone-s3-cache /bin/
-ENTRYPOINT ["/bin/drone-s3-cache"]
+ENTRYPOINT [ "/bin/drone-s3-cache" ]
