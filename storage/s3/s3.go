@@ -223,7 +223,7 @@ func (s *s3Storage) Delete(p string) error {
 
 	err = s.client.RemoveObject(bucket, key)
 	if err != nil {
-		return fmt.Errorf("could not delete ")
+		return fmt.Errorf("could not delete file in %s at %s: %w", bucket, key, err)
 	}
 	return err
 }
