@@ -7,6 +7,8 @@ github.com/drone-plugins/drone-plugin-lib v0.3.1 h1:Br43wRnot2CpDGKPIKOnIxkTsuII
 github.com/drone-plugins/drone-plugin-lib v0.3.1/go.mod h1:ZUKtwSoUmeCj7DXMS3WktDdMAWudW7O6dYAZZRISv4M=
 github.com/drone/drone-cache-lib v0.0.0-20190801203708-a409e1feb142 h1:bvQYvXNOoEZ3SsbcOvqhgYQNEIHqB4tvY+ET723c40k=
 github.com/drone/drone-cache-lib v0.0.0-20190801203708-a409e1feb142/go.mod h1:Np7bwqKAR0z64YNaQUsx+hxX8AjNQ74I8TbZmjNitr4=
+github.com/drone/drone-cache-lib v0.0.0-20200806063744-981868645a25 h1:N+6U73tFu7x3t9+9dj7hetfgp/ZZ1J4bMU7amKiNh+c=
+github.com/drone/drone-cache-lib v0.0.0-20200806063744-981868645a25/go.mod h1:Np7bwqKAR0z64YNaQUsx+hxX8AjNQ74I8TbZmjNitr4=
 github.com/dustin/go-humanize v1.0.0 h1:VSnTsYCnlFHaM2/igO1h6X3HA71jcobQuxemgkq4zYo=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/franela/goblin v0.0.0-20181003173013-ead4ad1d2727/go.mod h1:7dvUGVsVBjqR7JHJk0brhHOZYGmfBYOrK0ZhYMEtBr4=
