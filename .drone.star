@@ -5,8 +5,8 @@ def main(ctx):
     linux(ctx, 'amd64'),
     linux(ctx, 'arm64'),
     linux(ctx, 'arm'),
-    windows(ctx, '1903'),
-    windows(ctx, '1809'),
+    #windows(ctx, '1903'),
+    #windows(ctx, '1809'),
   ]
 
   after = manifest(ctx) + gitter(ctx)
