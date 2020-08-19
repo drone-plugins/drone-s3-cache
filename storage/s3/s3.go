@@ -53,7 +53,7 @@ func New(opts *Options) (storage.Storage, error) {
 			return nil, fmt.Errorf("could not connect to %s using IAM role: %w", opts.Endpoint, err)
 		}
 	}
-	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, "")
+	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, opts.Region)
 
 	if err != nil {
 		return nil, fmt.Errorf("could not connect to %s: %w", opts.Endpoint, err)
