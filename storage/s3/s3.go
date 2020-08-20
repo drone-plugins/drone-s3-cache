@@ -41,18 +41,19 @@ type s3Storage struct {
 
 // New method creates an implementation of Storage with S3 as the backend.
 func New(opts *Options) (storage.Storage, error) {
-	var creds *credentials.Credentials
-	if len(opts.Access) != 0 && len(opts.Secret) != 0 {
-		creds = credentials.NewStaticV4(opts.Access, opts.Secret, opts.Token)
-	} else {
-		creds = credentials.NewIAM("")
-
-		// See if the IAM role can be retrieved
-		_, err := creds.Get()
-		if err != nil {
-			return nil, fmt.Errorf("could not connect to %s using IAM role: %w", opts.Endpoint, err)
-		}
-	}
+	var creds = credentials.NewChainCredentials([]credentials.Provider{
+		&credentials.Static{
+			Value: credentials.Value{
+				AccessKeyID:     opts.Access,
+				SecretAccessKey: opts.Secret,
+				SessionToken:    opts.Token,
+				SignerType:      credentials.SignatureV4,
+			},
+		},
+		&credentials.IAM{},
+		&credentials.FileAWSCredentials{},
+		&credentials.EnvAWS{},
+	})
 	client, err := minio.NewWithCredentials(opts.Endpoint, creds, opts.UseSSL, opts.Region)
 
 	if err != nil {
