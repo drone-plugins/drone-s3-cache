@@ -124,5 +124,17 @@ func settingsFlags(settings *plugin.Settings) []cli.Flag {
 			EnvVars:     []string{"PLUGIN_REGION", "CACHE_S3_REGION"},
 			Destination: &settings.S3Options.Region,
 		},
+		&cli.StringFlag{
+			Name:        "file-credentials",
+			Usage:       "path to s3 credentials file",
+			EnvVars:     []string{"PLUGIN_FILE_CREDENTIALS_PATH", "CACHE_FILE_CREDENTIALS_PATH", "AWS_SHARED_CREDENTIALS_FILE"},
+			Destination: &settings.S3Options.FileCredentials,
+		},
+		&cli.StringFlag{
+			Name:        "profile",
+			Usage:       "s3 profile name",
+			EnvVars:     []string{"PLUGIN_PROFILE", "CACHE_S3_PROFILE", "AWS_PROFILE"},
+			Destination: &settings.S3Options.Profile,
+		},
 	}
 }

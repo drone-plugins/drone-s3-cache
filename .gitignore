@@ -1,5 +1,6 @@
 /release/
 /drone-s3-cache*
+/.idea
 
 coverage.out
 .drone.yml

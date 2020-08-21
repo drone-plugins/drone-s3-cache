@@ -20,6 +20,8 @@ type Options struct {
 	Secret              string
 	Access              string
 	Token               string
+	FileCredentials     string
+	Profile             string
 
 	// us-east-1
 	// us-west-1
@@ -44,6 +46,8 @@ func New(opts *Options) (storage.Storage, error) {
 	var creds *credentials.Credentials
 	if len(opts.Access) != 0 && len(opts.Secret) != 0 {
 		creds = credentials.NewStaticV4(opts.Access, opts.Secret, opts.Token)
+	} else if len(opts.FileCredentials) != 0 {
+		creds = credentials.NewFileAWSCredentials(opts.FileCredentials, opts.Profile)
 	} else {
 		creds = credentials.NewIAM("")
 

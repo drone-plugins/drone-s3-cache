@@ -8,6 +8,7 @@ package plugin
 import (
 	"fmt"
 	"net/url"
+	"os"
 	pathutil "path"
 	"strings"
 	"time"
@@ -246,6 +247,17 @@ func (p *Plugin) validateS3() error {
 			return fmt.Errorf("region %s already specified in endpoint remove from config", region)
 		}
 		p.settings.S3Options.Region = region
+	}
+	s3Opts := p.settings.S3Options
+
+	if (s3Opts.Access != "" || s3Opts.Secret != "") && s3Opts.FileCredentials != "" {
+		return fmt.Errorf("only one credentials method should be used. Use either access-key and secret-key OR the credentials file")
+	}
+
+	if s3Opts.FileCredentials != "" {
+		if _, err := os.Stat(s3Opts.FileCredentials); os.IsNotExist(err) {
+			return fmt.Errorf("file %s does not exist", s3Opts.FileCredentials)
+		}
 	}
 
 	logrus.WithFields(logrus.Fields{
