@@ -250,13 +250,13 @@ func (p *Plugin) validateS3() error {
 	}
 	s3Opts := p.settings.S3Options
 
-	if (s3Opts.Access != "" || s3Opts.Secret != "") && s3Opts.FileCredentialsPath != "" {
+	if (s3Opts.Access != "" || s3Opts.Secret != "") && s3Opts.FileCredentials != "" {
 		return fmt.Errorf("only one credentials method should be used. Use either access-key and secret-key OR the credentials file")
 	}
 
-	if s3Opts.FileCredentialsPath != "" {
-		if _, err := os.Stat(s3Opts.FileCredentialsPath); os.IsNotExist(err) {
-			return fmt.Errorf("file %s does not exist", s3Opts.FileCredentialsPath)
+	if s3Opts.FileCredentials != "" {
+		if _, err := os.Stat(s3Opts.FileCredentials); os.IsNotExist(err) {
+			return fmt.Errorf("file %s does not exist", s3Opts.FileCredentials)
 		}
 	}
 
