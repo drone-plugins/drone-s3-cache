@@ -2,9 +2,9 @@ package main
 
 import (
 	"io/ioutil"
+	"os"
 	pathutil "path"
 	"time"
-	"os"
 
 	"github.com/drone/drone-cache-lib/archive/util"
 	"github.com/drone/drone-cache-lib/cache"

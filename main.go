@@ -266,6 +266,7 @@ func run(c *cli.Context) error {
 
 	flushAge, err := strconv.Atoi(c.String("flush_age"))
 
+
 	if err != nil {
 		return err
 	}
