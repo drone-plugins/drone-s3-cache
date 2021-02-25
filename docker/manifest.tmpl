@@ -22,6 +22,11 @@ manifests:
       architecture: arm
       os: linux
       variant: v7
+  - image: plugins/s3-cache:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}windows-20H2-amd64
+    platform:
+      architecture: amd64
+      os: windows
+      version: 20H2
   - image: plugins/s3-cache:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}windows-2004-amd64
     platform:
       architecture: amd64
