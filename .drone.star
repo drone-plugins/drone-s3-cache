@@ -49,6 +49,7 @@ def _testing(ctx):
                 "pull": "always",
                 "commands": [
                     "go get -d ./...",
+                    "go build ./cmd/drone-s3-cache",
                 ],
                 "volumes": [
                     {
