@@ -48,7 +48,7 @@ def _testing(ctx):
                 "image": "golang:%s" % (_GO_VERSION),
                 "pull": "always",
                 "commands": [
-                    "go get github.com/drone-plugins/drone-s3-cache",
+                    "go get -d ./...",
                 ],
                 "volumes": [
                     {
