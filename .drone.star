@@ -1,6 +1,6 @@
 """Starlark build for drone-plugins/drone-s3-cache."""
 
-_GO_VERSION = "1.16"
+_GO_VERSION = "1.15"
 
 def main(ctx):
     """Entrypoint for the build. 
@@ -49,7 +49,6 @@ def _testing(ctx):
                 "pull": "always",
                 "commands": [
                     "go get -d ./...",
-                    "go build ./cmd/drone-s3-cache",
                 ],
                 "volumes": [
                     {
