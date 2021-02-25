@@ -48,7 +48,7 @@ def _testing(ctx):
                 "image": "golang:%s" % (_GO_VERSION),
                 "pull": "always",
                 "commands": [
-                    "go get .",
+                    "go mod download",
                 ],
                 "volumes": [
                     {
